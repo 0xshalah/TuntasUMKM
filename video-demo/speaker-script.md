@@ -54,6 +54,37 @@ Setiap slide punya **dua bagian yang jelas terpisah**:
 
 ---
 
+## 3-LAYER BOUNDARY MODEL
+
+```
+┌──────────────────────┐
+│     HUMAN / UI       │
+│  Approve / Reject    │
+└──────────┬───────────┘
+           │ authorization
+┌──────────▼───────────┐
+│       BACKEND        │
+│ transaction boundary │
+│ stock / notification │
+│ audit log            │
+└──────────▲───────────┘
+           │ MCP tools
+┌──────────┴───────────┐
+│    HERMES AGENT      │
+│                      │
+│ search_catalog       │
+│ check_inventory      │
+│ calculate_total      │
+│ create_order_draft   │
+└──────────────────────┘
+```
+
+**Layer 1 - MCP Exposure:** Hermes hanya memuat 4 capabilities yang dibutuhkan agent.
+**Layer 2 - Backend Authorization:** Backend memvalidasi sebelum menjalankan transaction effects.
+**Layer 3 - Human Approval:** Manusia memegang keputusan final.
+
+---
+
 ## SCENE 0 — HOOK (0:00 - 0:30)
 
 **[SLIDE: 0] — Title slide TUNTASUMKM**
@@ -76,11 +107,13 @@ Setiap slide punya **dua bagian yang jelas terpisah**:
 
 ## SCENE 2 — ARCHITECTURE (1:00 - 1:30)
 
-**[SLIDE: 2] — Architecture diagram: flow + capability panel**
+**[SLIDE: 2] — Architecture: 3-layer boundary**
 
-> "Ini arsitektur TuntasUMKM. Customer mengirim pesan. Hermes Agent menerima intent. Agent menggunakan bounded business tools untuk mencari produk dan membuat draft."
+> "Ini arsitektur TuntasUMKM dengan 3-layer boundary."
 >
-> "Agent TIDAK punya tool untuk approve, reject, deduct stock, atau send message. Authority boundary berasal dari capability access, bukan prompt instruction."
+> "Layer 1 - MCP Exposure: Hermes hanya memuat 4 capabilities. Layer 2 - Backend Authorization: Backend memvalidasi sebelum menjalankan effects. Layer 3 - Human Approval: Manusia memegang keputusan final."
+>
+> "Authority boundary berasal dari capability access, bukan prompt instruction."
 
 ---
 
@@ -301,7 +334,7 @@ Available tools:
 - [ ] Browser fullscreen (F11)
 - [ ] Zoom 100% (Ctrl+0)
 - [ ] Resolution 1920x1080
-- [ ] PPT file: `video-demo/TuntasUMKM-HackFest2026-v4.pptx`
+- [ ] PPT file: `video-demo/TuntasUMKM-HackFest2026-v5.pptx`
 - [ ] Script: `video-demo/speaker-script.md`
 - [ ] No secrets visible di screen
 - [ ] No .env files visible
@@ -335,7 +368,7 @@ Available tools:
 |---|---|---|
 | 0:00 - 0:30 | SLIDE 0 | Title slide |
 | 0:30 - 1:00 | SLIDE 1 | Solution positioning |
-| 1:00 - 1:30 | SLIDE 2 | Architecture diagram |
+| 1:00 - 1:30 | SLIDE 2 | Architecture: 3-layer boundary |
 | 1:30 - 2:15 | SLIDE 3 | User intent |
 | 2:15 - 2:45 | SLIDE 4 | Agent execution flow |
 | 2:45 - 3:15 | DEMO | Terminal — live MCP execution |
