@@ -79,11 +79,11 @@ Setiap slide punya **dua bagian yang jelas terpisah**:
 └──────────────────────┘
 ```
 
-**Layer 1 — MCP Exposure Control:** Hermes hanya memuat 4 business capabilities. Transactional operations (approve, deduct_stock, send_customer_message) tidak tersedia di MCP tool registry.
+**Layer 1 — Human / UI:** Manusia memegang keputusan final melalui UI. Approve / Reject adalah business authorization gate.
 
-**Layer 2 — Backend State-Transition Enforcement:** Backend memastikan hanya order berstatus `pending_approval` yang bisa bertransisi. Double approval tidak mungkin. Stock tidak bisa negatif.
+**Layer 2 — Backend:** Backend memastikan hanya order berstatus `pending_approval` yang bisa bertransisi. Double approval tidak mungkin. Stock tidak bisa negatif. Transaction effects (stock deduction, notification) dieksekusi di sini.
 
-**Layer 3 — Human Approval:** Manusia memegang keputusan final melalui UI.
+**Layer 3 — Hermes Agent (MCP Exposure):** Hermes hanya memuat 4 business capabilities. Transactional operations (approve, deduct_stock, send_customer_message) tidak tersedia di MCP tool registry.
 
 **Important note:** Endpoint `/api/v1/orders/{id}/approve` saat ini belum memiliki authentication. Identity-level authorization belum diimplementasikan. Yang di-enforce adalah state-transition validity.
 
@@ -115,7 +115,7 @@ Setiap slide punya **dua bagian yang jelas terpisah**:
 
 > "Ini arsitektur TuntasUMKM dengan 3-layer boundary."
 >
-> "Layer 1 — MCP Exposure Control: Hermes hanya memuat 4 business capabilities. Layer 2 — Backend State-Transition Enforcement: Backend memvalidasi status sebelum menjalankan effects. Layer 3 — Human Approval: Manusia memegang keputusan final."
+> "Layer 1 — Human / UI: Manusia memegang keputusan final. Layer 2 — Backend: Backend memvalidasi status sebelum menjalankan effects. Layer 3 — Hermes Agent: Hermes hanya memuat 4 business capabilities."
 
 > "Boundary ini berasal dari capability separation, bukan hanya prompt instruction."
 
@@ -219,8 +219,8 @@ PENDING APPROVAL
 **[SLIDE: 7] — Stock transition: 5 → 4**
 
 > "Setelah human approval, backend menjalankan transaction effects."
->
-> "Stock: 5 → 4. Customer notified. Audit trail tercatat."
+
+> "Stock: 5 → 4. Customer notified. Audit trail tercatat. Ini bukti bahwa side effects hanya terjadi setelah human approval."
 
 ---
 
@@ -263,10 +263,10 @@ for row in cur.fetchall():
 Order: ORD-20260927-35BD8E
 Status: approved
 Total: Rp 520,000
-Current stock SRG-TNN-04: 2
+Current stock SRG-TNN-04: 4
 agent  | create_draft         | None -> pending_approval
 human  | APPROVE_ORDER        | pending_approval -> approved
-agent  | DEDUCT_STOCK         | 3 -> 2
+agent  | DEDUCT_STOCK         | 5 -> 4
 agent  | NOTIFY_CUSTOMER      | None -> sent
 ```
 
@@ -282,9 +282,9 @@ agent  | NOTIFY_CUSTOMER      | None -> sent
 >
 > "Entry 2: human — APPROVE_ORDER. Manusia approve via UI."
 >
-> "Entry 3: agent — DEDUCT_STOCK. Backend deduct stock setelah approval."
+> "Entry 3: agent — DEDUCT_STOCK. Stock deduction 5 → 4 dieksekusi backend setelah approval."
 
-> "Entry 4: agent — NOTIFY_CUSTOMER. Backend kirim notification setelah approval."
+> "Entry 4: agent — NOTIFY_CUSTOMER. Notifikasi dikirim backend setelah approval."
 
 > "Actor agent untuk DEDUCT_STOCK dan NOTIFY_CUSTOMER merepresentasikan origin workflow — backend mengeksekusi side effects atas otorisasi human approval. Physical executor adalah backend, logical origin adalah agent workflow."
 
@@ -346,7 +346,7 @@ Available tools:
 - [ ] Browser fullscreen (F11)
 - [ ] Zoom 100% (Ctrl+0)
 - [ ] Resolution 1920x1080
-- [ ] PPT file: `video-demo/TuntasUMKM-HackFest2026-v6.pptx`
+- [ ] PPT file: `video-demo/TuntasUMKM-HackFest2026-v7.pptx`
 - [ ] Script: `video-demo/speaker-script.md`
 - [ ] No secrets visible di screen
 - [ ] No .env files visible

@@ -16,8 +16,8 @@
     {
       "layout": "architecture_3layer",
       "title": "Architecture: 3-Layer Boundary",
-      "subtitle": "MCP Exposure + Backend Enforcement + Human Approval",
-      "notes": "Layer 1 — MCP Exposure Control: Hermes hanya memuat 4 business capabilities. Layer 2 — Backend State-Transition Enforcement: Backend memvalidasi status sebelum menjalankan effects. Layer 3 — Human Approval: Manusia memegang keputusan final. Boundary berasal dari capability separation, bukan hanya prompt instruction."
+      "subtitle": "Human / UI + Backend + Hermes Agent (MCP Exposure)",
+      "notes": "Layer 1 — Human / UI: Manusia memegang keputusan final. Layer 2 — Backend: Backend memvalidasi status sebelum menjalankan effects. Layer 3 — Hermes Agent: Hermes hanya memuat 4 business capabilities. Boundary berasal dari capability separation, bukan hanya prompt instruction."
     },
     {
       "layout": "user_intent",
@@ -53,7 +53,7 @@
       "layout": "audit",
       "title": "Audit Trail",
       "subtitle": "4 entries with clear actor attribution",
-      "notes": "Entry 1: agent create_draft. Entry 2: human APPROVE_ORDER. Entry 3: agent DEDUCT_STOCK. Entry 4: agent NOTIFY_CUSTOMER. Actor agent untuk DEDUCT_STOCK dan NOTIFY_CUSTOMER merepresentasikan origin workflow — backend mengeksekusi side effects atas otorisasi human approval."
+      "notes": "Entry 1: agent create_draft. Entry 2: human APPROVE_ORDER. Entry 3: agent DEDUCT_STOCK (5→4). Entry 4: agent NOTIFY_CUSTOMER. Actor agent untuk DEDUCT_STOCK dan NOTIFY_CUSTOMER merepresentasikan origin workflow — backend mengeksekusi side effects atas otorisasi human approval."
     },
     {
       "layout": "attack_boundary",
