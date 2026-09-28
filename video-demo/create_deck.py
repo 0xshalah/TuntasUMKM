@@ -297,6 +297,42 @@ def content_slide(prs, spec):
         add_notes(slide, spec["notes"])
     return slide
 
+
+def arch_3layer_slide(prs, spec):
+    slide = prs.slides.add_slide(prs.slide_layouts[6])
+    set_bg(slide, spec.get("background", BG))
+    add_text(slide, 0.8, 0.3, 11.7, 0.8, spec["title"], 40, TITLE, True)
+    if spec.get("subtitle"):
+        add_text(slide, 0.8, 1.1, 11.7, 0.5, spec["subtitle"], 20, SUBTITLE)
+    
+    # Layer 1 - Human/UI (top)
+    add_rect(slide, 1.5, 1.8, 10.0, 1.2, CARD_BG, border=ORANGE)
+    add_text(slide, 1.7, 2.0, 9.6, 0.4, "Layer 1: HUMAN / UI", 18, ORANGE, True)
+    add_text(slide, 1.7, 2.4, 9.6, 0.5, "Approve / Reject  |  Business Authorization Gate", 14, BODY)
+    
+    # Arrow down
+    add_arrow(slide, 6.3, 3.0, 0.3, 0.4, "525252")
+    
+    # Layer 2 - Backend (middle)
+    add_rect(slide, 1.5, 3.4, 10.0, 1.2, CARD_BG, border=GREEN)
+    add_text(slide, 1.7, 3.6, 9.6, 0.4, "Layer 2: BACKEND", 18, GREEN, True)
+    add_text(slide, 1.7, 4.0, 9.6, 0.5, "Transaction Boundary  |  Stock / Notification  |  Audit Log", 14, BODY)
+    
+    # Arrow down
+    add_arrow(slide, 6.3, 4.6, 0.3, 0.4, "525252")
+    
+    # Layer 3 - Hermes Agent (bottom)
+    add_rect(slide, 1.5, 5.0, 10.0, 1.8, CARD_BG, border=BLUE)
+    add_text(slide, 1.7, 5.2, 9.6, 0.4, "Layer 3: HERMES AGENT (MCP Exposure)", 18, BLUE, True)
+    add_text(slide, 1.7, 5.7, 9.6, 1.0,
+        "✓ search_catalog  ✓ check_inventory  ✓ calculate_order_total  ✓ create_order_draft\n\n"
+        "✗ approve_order  ✗ reject_order  ✗ deduct_stock  ✗ send_customer_message",
+        14, BODY)
+    
+    if spec.get("notes"):
+        add_notes(slide, spec["notes"])
+    return slide
+
 def create_deck(spec_path, output_path):
     with open(spec_path, encoding="utf-8") as f:
         spec = json.load(f)
@@ -311,6 +347,8 @@ def create_deck(spec_path, output_path):
             solution_slide(prs, slide_spec)
         elif layout == "architecture":
             arch_slide(prs, slide_spec)
+        elif layout == "architecture_3layer":
+            arch_3layer_slide(prs, slide_spec)
         elif layout == "user_intent":
             user_intent_slide(prs, slide_spec)
         elif layout == "agent_execution":

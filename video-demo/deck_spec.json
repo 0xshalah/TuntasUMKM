@@ -11,28 +11,18 @@
       "layout": "solution",
       "title": "Solution: AI-Assisted, Not AI-Autonomous",
       "subtitle": "TuntasUMKM positioning",
-      "bullets": [
-        "AI Agent receives customer intent",
-        "AI Agent searches products and creates draft order",
-        "Human holds the transaction gate",
-        "Backend executes side effects after approval",
-        "Everything is auditable"
-      ],
       "notes": "TuntasUMKM adalah AI-assisted order management, bukan AI-autonomous. AI Agent menerima intent customer, mencari produk, membuat draft order. Manusia memegang transaction gate. Backend menjalankan side effects. Semua diaudit."
     },
     {
-      "layout": "architecture",
-      "title": "Architecture: Authority Boundary",
-      "subtitle": "Capability-based boundary, not prompt-based",
-      "notes": "Ini arsitektur TuntasUMKM. Customer mengirim pesan. Hermes Agent menerima intent. Agent menggunakan bounded business tools untuk mencari produk dan membuat draft. Agent TIDAK punya tool untuk approve, reject, deduct stock, atau send message. Authority boundary berasal dari capability access, bukan prompt instruction."
+      "layout": "architecture_3layer",
+      "title": "Architecture: 3-Layer Boundary",
+      "subtitle": "MCP Exposure + Backend Authorization + Human Approval",
+      "notes": "Ini arsitektur TuntasUMKM dengan 3-layer boundary. Layer 1 - MCP Exposure: Hermes hanya memuat 4 capabilities. Layer 2 - Backend Authorization: Backend memvalidasi sebelum menjalankan effects. Layer 3 - Human Approval: Manusia memegang keputusan final."
     },
     {
       "layout": "user_intent",
       "title": "User Intent",
       "subtitle": "Customer message",
-      "bullets": [
-        "\"Saya mau pesan Sarung Tenun Samarinda 1 pcs\""
-      ],
       "notes": "Customer mengirim pesan: Saya mau pesan Sarung Tenun Samarinda 1 pcs. Agent menerima intent ini dan mulai bekerja."
     },
     {
@@ -45,12 +35,6 @@
       "layout": "boundary",
       "title": "The Boundary",
       "subtitle": "Agent stops here",
-      "bullets": [
-        "Status: pending_approval",
-        "No stock deduction",
-        "No transaction final",
-        "Order menunggu persetujuan manusia"
-      ],
       "notes": "Sampai sini AI berhenti. Status: pending_approval. Tidak ada stock deduction. Tidak ada transaksi final. Order menunggu persetujuan manusia."
     },
     {
@@ -63,11 +47,6 @@
       "layout": "real_effect",
       "title": "Real Effect",
       "subtitle": "Stock transition after approval",
-      "bullets": [
-        "Stock: 5 → 4",
-        "Customer notified",
-        "Audit trail recorded"
-      ],
       "notes": "Setelah human approval, backend menjalankan transaction effects. Stock: 5 → 4. Customer notified. Audit trail tercatat."
     },
     {
