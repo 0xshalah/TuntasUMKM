@@ -9,7 +9,7 @@
       "notes": "UMKM menerima pesanan dari berbagai channel. Automation dapat membantu — tetapi keputusan transaksional membutuhkan kontrol yang jelas."
     },
     {
-      "layout": "title_content",
+      "layout": "problem",
       "title": "The Problem",
       "bullets": [
         "UMKM menerima pesanan dari berbagai channel — WhatsApp, Instagram, Tokopedia",
@@ -32,7 +32,7 @@
       "notes": "Hermes Agent menjadi reasoning dan tool-use runtime. MCP menjadi capability boundary untuk tools yang diberikan kepada agent."
     },
     {
-      "layout": "title_content",
+      "layout": "bounded_authority",
       "title": "Bounded Authority",
       "bullets": [
         "Available: search_catalog, check_inventory, calculate_order_total, create_order_draft",
@@ -43,7 +43,7 @@
       "notes": "Agent memiliki kewenangan yang dibatasi. Transaction authority tetap berada pada backend + human approval."
     },
     {
-      "layout": "title_content",
+      "layout": "hitl",
       "title": "Human-in-the-Loop",
       "bullets": [
         "Agent membuat draft order (status: pending_approval)",
@@ -56,7 +56,7 @@
       "notes": "Human approval bukan sekadar UI decoration. Approval adalah transaction gate."
     },
     {
-      "layout": "title_content",
+      "layout": "mcp_tools",
       "title": "MCP Tools",
       "bullets": [
         "search_catalog — Search product catalog by name, SKU, or keyword",
@@ -68,7 +68,7 @@
       "notes": "Keempat tools tersebut AVAILABLE. Tidak semua tools dipanggil pada setiap workflow. Agent memilih tools yang diperlukan berdasarkan intent."
     },
     {
-      "layout": "title_content",
+      "layout": "evidence",
       "title": "Verified Demo Evidence",
       "bullets": [
         "Order ID: ORD-20260927-35BD8E",
@@ -82,7 +82,7 @@
       "notes": "Audit trail: agent create_draft, human APPROVE_ORDER, agent DEDUCT_STOCK, agent NOTIFY_CUSTOMER."
     },
     {
-      "layout": "title_content",
+      "layout": "audit",
       "title": "Audit Trail",
       "bullets": [
         "01 — agent: create_draft → pending_approval",
@@ -94,7 +94,7 @@
       "notes": "Audit trail mencatat bukan hanya apa yang terjadi, tetapi juga actor yang tercatat pada setiap tahap."
     },
     {
-      "layout": "title_content",
+      "layout": "security",
       "title": "Security & Safety Model",
       "bullets": [
         "Capability Boundary — Agent hanya mendapatkan tools yang diperlukan",
@@ -107,7 +107,7 @@
       "notes": "The architecture is designed around bounded authority, human approval, and auditability."
     },
     {
-      "layout": "title_content",
+      "layout": "comparison",
       "title": "Why This Is Different From a Chatbot",
       "bullets": [
         "Traditional Chatbot: Generates text → TuntasUMKM: Uses business tools",
