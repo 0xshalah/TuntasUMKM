@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920">
+<title>Scene 09 — Audit Trail</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    background: #0a0a0a;
+    color: #f5f5f5;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 1080px;
+    overflow: hidden;
+}
+.container {
+    width: 1920px;
+    height: 1080px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px;
+}
+.header { text-align: center; margin-bottom: 48px; }
+.header h1 { font-size: 48px; font-weight: 700; margin-bottom: 12px; }
+.header p { font-size: 20px; color: #a3a3a3; }
+.audit-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 900px;
+}
+.audit-entry {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    background: #141414;
+    border: 1px solid #2a2a2a;
+    border-radius: 16px;
+    padding: 24px 32px;
+}
+.audit-num {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+.audit-entry:nth-child(1) .audit-num { background: rgba(59,130,246,0.15); color: #3b82f6; }
+.audit-entry:nth-child(2) .audit-num { background: rgba(249,115,22,0.15); color: #f97316; }
+.audit-entry:nth-child(3) .audit-num { background: rgba(59,130,246,0.15); color: #3b82f6; }
+.audit-entry:nth-child(4) .audit-num { background: rgba(59,130,246,0.15); color: #3b82f6; }
+.audit-actor {
+    min-width: 100px;
+    text-align: center;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.audit-entry:nth-child(1) .audit-actor,
+.audit-entry:nth-child(3) .audit-actor,
+.audit-entry:nth-child(4) .audit-actor {
+    background: rgba(59,130,246,0.15);
+    color: #3b82f6;
+}
+.audit-entry:nth-child(2) .audit-actor {
+    background: rgba(249,115,22,0.15);
+    color: #f97316;
+}
+.audit-action {
+    flex: 1;
+}
+.audit-action-name {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-size: 18px;
+    font-weight: 600;
+    color: #f5f5f5;
+    margin-bottom: 4px;
+}
+.audit-action-desc {
+    font-size: 14px;
+    color: #737373;
+}
+.audit-state {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-size: 14px;
+    color: #a3a3a3;
+    text-align: right;
+}
+.audit-arrow { color: #525252; margin: 0 8px; }
+.audit-after { color: #22c55e; }
+.note {
+    margin-top: 40px;
+    max-width: 800px;
+    text-align: center;
+    padding: 20px;
+    background: rgba(100,116,139,0.08);
+    border: 1px solid rgba(100,116,139,0.2);
+    border-radius: 12px;
+}
+.note p { font-size: 16px; color: #64748b; line-height: 1.6; }
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Audit Trail</h1>
+        <p>Actor-separated record of every state transition</p>
+    </div>
+    <div class="audit-list">
+        <div class="audit-entry">
+            <div class="audit-num">01</div>
+            <div class="audit-actor">Agent</div>
+            <div class="audit-action">
+                <div class="audit-action-name">create_draft</div>
+                <div class="audit-action-draft">Draft created by MCP agent tool</div>
+            </div>
+            <div class="audit-state">→ pending_approval</div>
+        </div>
+        <div class="audit-entry">
+            <div class="audit-num">02</div>
+            <div class="audit-actor">Human</div>
+            <div class="audit-action">
+                <div class="audit-action-name">APPROVE_ORDER</div>
+                <div class="audit-action-desc">Human approval via dashboard UI</div>
+            </div>
+            <div class="audit-state">pending_approval <span class="audit-arrow">→</span> <span class="audit-after">approved</span></div>
+        </div>
+        <div class="audit-entry">
+            <div class="audit-num">03</div>
+            <div class="audit-actor">Agent</div>
+            <div class="audit-action">
+                <div class="audit-action-name">DEDUCT_STOCK</div>
+                <div class="audit-action-desc">Backend workflow after human approval</div>
+            </div>
+            <div class="audit-state">reserved <span class="audit-arrow">→</span> <span class="audit-after">deducted</span></div>
+        </div>
+        <div class="audit-entry">
+            <div class="audit-num">04</div>
+            <div class="audit-actor">Agent</div>
+            <div class="audit-action">
+                <div class="audit-action-name">NOTIFY_CUSTOMER</div>
+                <div class="audit-action-desc">Customer notification recorded</div>
+            </div>
+            <div class="audit-state">llm:agnes-2.5-flash <span class="audit-arrow">→</span> <span class="audit-after">sent</span></div>
+        </div>
+    </div>
+    <div class="note">
+        <p>Audit trail mencatat bukan hanya apa yang terjadi, tetapi juga actor yang tercatat pada setiap tahap. Agent tidak memiliki tool untuk approve_order, deduct_stock, atau send_customer_message — audit actor menunjukkan downstream backend effects setelah human approval.</p>
+    </div>
+</div>
+</body>
+</html>

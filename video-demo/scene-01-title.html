@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920">
+<title>Scene 01 — Title</title>
+<style>
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    background: #0a0a0a;
+    color: #f5f5f5;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    overflow: hidden;
+}
+.container {
+    width: 1920px;
+    height: 1080px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.title-scene {
+    text-align: center;
+    z-index: 2;
+}
+.hero-title {
+    font-size: 120px;
+    font-weight: 800;
+    letter-spacing: -4px;
+    color: #f5f5f5;
+    margin-bottom: 24px;
+}
+.hero-subtitle {
+    font-size: 36px;
+    font-weight: 400;
+    color: #a3a3a3;
+    max-width: 900px;
+    line-height: 1.4;
+    margin-bottom: 48px;
+}
+.hero-context {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    align-items: center;
+}
+.context-badge {
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: 500;
+    border: 1px solid #2a2a2a;
+    background: #141414;
+    color: #a3a3a3;
+}
+.context-badge.highlight {
+    border-color: #3b82f6;
+    color: #3b82f6;
+}
+.problem-statement {
+    margin-top: 64px;
+    max-width: 800px;
+    text-align: center;
+}
+.problem-statement p {
+    font-size: 22px;
+    color: #737373;
+    line-height: 1.6;
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="title-scene">
+        <h1 class="hero-title">TUNTASUMKM</h1>
+        <p class="hero-subtitle">AI Agent-assisted order management<br>with bounded authority and Human-in-the-Loop approval</p>
+        <div class="hero-context">
+            <span class="context-badge highlight">AI HackFest 2026</span>
+            <span class="context-badge">"Build Agent, Deliver Impact."</span>
+        </div>
+        <div class="problem-statement">
+            <p>UMKM menerima pesanan dari berbagai channel. Automation dapat membantu — tetapi keputusan transaksional membutuhkan kontrol yang jelas.</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

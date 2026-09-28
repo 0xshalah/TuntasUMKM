@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920">
+<title>Scene 08 — Real Business Effect</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    background: #0a0a0a;
+    color: #f5f5f5;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 1080px;
+    overflow: hidden;
+}
+.container {
+    width: 1920px;
+    height: 1080px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px;
+}
+.header { text-align: center; margin-bottom: 60px; }
+.header h1 { font-size: 48px; font-weight: 700; margin-bottom: 12px; }
+.header p { font-size: 20px; color: #a3a3a3; }
+.effect-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 40px;
+    width: 1200px;
+}
+.effect-card {
+    background: #141414;
+    border: 1px solid #2a2a2a;
+    border-radius: 20px;
+    padding: 40px;
+    text-align: center;
+    position: relative;
+}
+.effect-card.stock { border-color: rgba(34,197,94,0.3); }
+.effect-card.deduction { border-color: rgba(245,158,11,0.3); }
+.effect-card.status { border-color: rgba(34,197,94,0.3); }
+.effect-label {
+    font-size: 14px;
+    color: #737373;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+}
+.effect-value {
+    font-size: 72px;
+    font-weight: 800;
+    margin-bottom: 8px;
+}
+.effect-card.stock .effect-value { color: #22c55e; }
+.effect-card.deduction .effect-value { color: #f59e0b; }
+.effect-card.status .effect-value { color: #22c55e; font-size: 48px; }
+.effect-sub {
+    font-size: 16px;
+    color: #a3a3a3;
+}
+.arrow-down {
+    font-size: 32px;
+    color: #525252;
+    margin: 8px 0;
+}
+.before-after {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+}
+.before-val { color: #737373; text-decoration: line-through; }
+.after-val { color: #22c55e; }
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Real Business Effect</h1>
+        <p>Backend transaction after human approval</p>
+    </div>
+    <div class="effect-grid">
+        <div class="effect-card stock">
+            <div class="effect-label">Stock</div>
+            <div class="before-after">
+                <span class="effect-value before-val">3</span>
+                <span class="arrow-down">→</span>
+                <span class="effect-value after-val">2</span>
+            </div>
+            <div class="effect-sub">Units available</div>
+        </div>
+        <div class="effect-card deduction">
+            <div class="effect-label">Deduction</div>
+            <div class="effect-value">-1</div>
+            <div class="effect-sub">Unit deducted</div>
+        </div>
+        <div class="effect-card status">
+            <div class="effect-label">Order Status</div>
+            <div class="effect-value">APPROVED</div>
+            <div class="effect-sub">Transaction complete</div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

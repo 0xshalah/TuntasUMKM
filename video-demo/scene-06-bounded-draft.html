@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920">
+<title>Scene 06 — Bounded Draft</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    background: #0a0a0a;
+    color: #f5f5f5;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 1080px;
+    overflow: hidden;
+}
+.container {
+    width: 1920px;
+    height: 1080px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px;
+}
+.header { text-align: center; margin-bottom: 48px; }
+.header h1 { font-size: 48px; font-weight: 700; margin-bottom: 12px; }
+.header p { font-size: 20px; color: #a3a3a3; }
+.draft-card {
+    background: #141414;
+    border: 1px solid #2a2a2a;
+    border-radius: 20px;
+    padding: 48px 56px;
+    width: 800px;
+    position: relative;
+}
+.draft-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #f59e0b, #f97316);
+    border-radius: 20px 20px 0 0;
+}
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 32px;
+    background: rgba(245,158,11,0.15);
+    color: #f59e0b;
+    border: 1px solid rgba(245,158,11,0.3);
+}
+.status-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #f59e0b;
+    animation: pulse 2s infinite;
+}
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+}
+.order-id {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-size: 32px;
+    font-weight: 700;
+    color: #f5f5f5;
+    margin-bottom: 24px;
+}
+.order-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 32px;
+}
+.detail-item {
+    padding: 16px;
+    background: #1a1a1a;
+    border-radius: 12px;
+    border: 1px solid #2a2a2a;
+}
+.detail-label {
+    font-size: 12px;
+    color: #737373;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+}
+.detail-value {
+    font-size: 18px;
+    font-weight: 600;
+    color: #f5f5f5;
+}
+.detail-value.mono {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-size: 16px;
+}
+.stock-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px;
+    background: rgba(34,197,94,0.08);
+    border: 1px solid rgba(34,197,94,0.2);
+    border-radius: 12px;
+}
+.stock-label { font-size: 14px; color: #737373; }
+.stock-value { font-size: 28px; font-weight: 700; color: #22c55e; }
+.boundary-note {
+    margin-top: 32px;
+    padding: 20px;
+    background: rgba(249,115,22,0.08);
+    border: 1px solid rgba(249,115,22,0.2);
+    border-radius: 12px;
+    text-align: center;
+}
+.boundary-note p {
+    font-size: 16px;
+    color: #f97316;
+    font-weight: 500;
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Bounded Draft</h1>
+        <p>Agent creates draft — transaction has NOT been approved</p>
+    </div>
+    <div class="draft-card">
+        <div class="status-badge">
+            <span class="status-dot"></span>
+            Pending Approval
+        </div>
+        <div class="order-id">ORD-20260927-35BD8E</div>
+        <div class="order-details">
+            <div class="detail-item">
+                <div class="detail-label">Product</div>
+                <div class="detail-value">Sarung Tenun Samarinda</div>
+            </div>
+            <div class="detail-item">
+                <div class="detail-label">SKU</div>
+                <div class="detail-value mono">SRG-TNN-04</div>
+            </div>
+            <div class="detail-item">
+                <div class="detail-label">Quantity</div>
+                <div class="detail-value">1 pcs</div>
+            </div>
+            <div class="detail-item">
+                <div class="detail-label">Total</div>
+                <div class="detail-value">Rp 520.000</div>
+            </div>
+        </div>
+        <div class="stock-info">
+            <span class="stock-label">Current Stock</span>
+            <span class="stock-value">3</span>
+        </div>
+        <div class="boundary-note">
+            <p>Agent hanya membuat draft. Menunggu persetujuan manusia.</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>
