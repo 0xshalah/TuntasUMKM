@@ -5,19 +5,19 @@
       "layout": "title",
       "title": "TUNTASUMKM",
       "subtitle": "AI Agent-assisted order management for UMKM\nwith bounded authority and Human-in-the-Loop approval",
-      "notes": "Masalahnya bukan AI bisa membuat order. Masalahnya adalah: berapa banyak akses yang seharusnya kita berikan ke AI sebelum AI bisa menghabiskan uang, mengubah stok, atau mengirim sesuatu ke customer?"
+      "notes": "Masalahnya bukan AI bisa membuat order. Masalahnya adalah: berapa banyak akses yang seharusnya kita berikan ke AI sebelum AI bisa menghabiskan uang, mengubah stok, atau mengirim sesuatu ke customer? Di TuntasUMKM, AI diberi bounded business tools untuk discovery, calculation, dan draft creation. Transaction effects dijalankan oleh backend setelah human approval."
     },
     {
       "layout": "solution",
       "title": "Solution: AI-Assisted, Not AI-Autonomous",
       "subtitle": "TuntasUMKM positioning",
-      "notes": "TuntasUMKM adalah AI-assisted order management, bukan AI-autonomous. AI Agent menerima intent customer, mencari produk, membuat draft order. Manusia memegang transaction gate. Backend menjalankan side effects. Semua diaudit."
+      "notes": "Kami memisahkan agent capability dari transaction execution. Agent hanya mendapat bounded tools. Backend menjalankan side effects setelah state transition. Semua diaudit."
     },
     {
       "layout": "architecture_3layer",
       "title": "Architecture: 3-Layer Boundary",
       "subtitle": "MCP Exposure + Backend Authorization + Human Approval",
-      "notes": "Ini arsitektur TuntasUMKM dengan 3-layer boundary. Layer 1 - MCP Exposure: Hermes hanya memuat 4 capabilities. Layer 2 - Backend Authorization: Backend memvalidasi sebelum menjalankan effects. Layer 3 - Human Approval: Manusia memegang keputusan final."
+      "notes": "Layer 1 — MCP Exposure Control: Hermes hanya memuat 4 business capabilities. Layer 2 — Backend State-Transition Enforcement: Backend memvalidasi status sebelum menjalankan effects. Layer 3 — Human Approval: Manusia memegang keputusan final. Boundary berasal dari capability separation, bukan hanya prompt instruction."
     },
     {
       "layout": "user_intent",
@@ -35,13 +35,13 @@
       "layout": "boundary",
       "title": "The Boundary",
       "subtitle": "Agent stops here",
-      "notes": "Sampai sini AI berhenti. Status: pending_approval. Tidak ada stock deduction. Tidak ada transaksi final. Order menunggu persetujuan manusia."
+      "notes": "Status: pending_approval. Tidak ada stock deduction. Tidak ada transaksi final. Di MCP tool registry, tidak ada approve_order, deduct_stock, send_customer_message. Ini design decision."
     },
     {
       "layout": "human_approval",
       "title": "Human Approval",
       "subtitle": "Transaction gate",
-      "notes": "Di sini keputusan transaksional berpindah ke manusia. Agent tidak memiliki capability untuk melakukan approval."
+      "notes": "Approval adalah backend operation yang dipicu dari human approval flow. Backend enforce state-transition: hanya order berstatus pending_approval yang bisa bertransisi. Honest note: endpoint approval saat ini belum memiliki authentication. Yang di-enforce adalah state-transition validity."
     },
     {
       "layout": "real_effect",
@@ -53,13 +53,13 @@
       "layout": "audit",
       "title": "Audit Trail",
       "subtitle": "4 entries with clear actor attribution",
-      "notes": "Empat entry audit trail. Setiap action tercatat dengan actor yang jelas. Entry 1: agent create_draft. Entry 2: human APPROVE_ORDER. Entry 3: agent DEDUCT_STOCK. Entry 4: agent NOTIFY_CUSTOMER."
+      "notes": "Entry 1: agent create_draft. Entry 2: human APPROVE_ORDER. Entry 3: agent DEDUCT_STOCK. Entry 4: agent NOTIFY_CUSTOMER. Actor agent untuk DEDUCT_STOCK dan NOTIFY_CUSTOMER merepresentasikan origin workflow — backend mengeksekusi side effects atas otorisasi human approval."
     },
     {
       "layout": "attack_boundary",
       "title": "Attack the Boundary",
       "subtitle": "Try to approve order",
-      "notes": "Bukan karena prompt-nya melarang agent. Tool-nya memang tidak tersedia. Coba minta agent approve order. Agent gagal karena capability-nya memang tidak ada."
+      "notes": "Bukan karena prompt-nya melarang agent. Tool-nya memang tidak ada di MCP registry. Honest limitation: agent memiliki execute_code dan terminal. Secara teknis bisa bypass. MCP boundary adalah model-awareness layer, bukan absolute security boundary. Security boundary yang sebenarnya ada di backend state-transition enforcement."
     },
     {
       "layout": "title",

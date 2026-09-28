@@ -79,9 +79,13 @@ Setiap slide punya **dua bagian yang jelas terpisah**:
 └──────────────────────┘
 ```
 
-**Layer 1 - MCP Exposure:** Hermes hanya memuat 4 capabilities yang dibutuhkan agent.
-**Layer 2 - Backend Authorization:** Backend memvalidasi sebelum menjalankan transaction effects.
-**Layer 3 - Human Approval:** Manusia memegang keputusan final.
+**Layer 1 — MCP Exposure Control:** Hermes hanya memuat 4 business capabilities. Transactional operations (approve, deduct_stock, send_customer_message) tidak tersedia di MCP tool registry.
+
+**Layer 2 — Backend State-Transition Enforcement:** Backend memastikan hanya order berstatus `pending_approval` yang bisa bertransisi. Double approval tidak mungkin. Stock tidak bisa negatif.
+
+**Layer 3 — Human Approval:** Manusia memegang keputusan final melalui UI.
+
+**Important note:** Endpoint `/api/v1/orders/{id}/approve` saat ini belum memiliki authentication. Identity-level authorization belum diimplementasikan. Yang di-enforce adalah state-transition validity.
 
 ---
 
@@ -91,7 +95,7 @@ Setiap slide punya **dua bagian yang jelas terpisah**:
 
 > "Masalahnya bukan AI bisa membuat order. Masalahnya adalah: berapa banyak akses yang seharusnya kita berikan ke AI sebelum AI bisa menghabiskan uang, mengubah stok, atau mengirim sesuatu ke customer?"
 >
-> "Di TuntasUMKM, AI boleh mencari, menghitung, dan membuat draft. Tapi AI tidak boleh menyelesaikan transaksi."
+> "Di TuntasUMKM, AI diberi bounded business tools untuk discovery, calculation, dan draft creation. Transaction effects dijalankan oleh backend setelah human approval."
 
 ---
 
@@ -101,7 +105,7 @@ Setiap slide punya **dua bagian yang jelas terpisah**:
 
 > "TuntasUMKM adalah AI-assisted order management, bukan AI-autonomous."
 >
-> "AI Agent menerima intent customer, mencari produk, membuat draft order. Manusia memegang transaction gate. Backend menjalankan side effects. Semua diaudit."
+> "Kami memisahkan agent capability dari transaction execution. Agent hanya mendapat bounded tools. Backend menjalankan side effects setelah state transition. Semua diaudit."
 
 ---
 
@@ -111,9 +115,9 @@ Setiap slide punya **dua bagian yang jelas terpisah**:
 
 > "Ini arsitektur TuntasUMKM dengan 3-layer boundary."
 >
-> "Layer 1 - MCP Exposure: Hermes hanya memuat 4 capabilities. Layer 2 - Backend Authorization: Backend memvalidasi sebelum menjalankan effects. Layer 3 - Human Approval: Manusia memegang keputusan final."
->
-> "Authority boundary berasal dari capability access, bukan prompt instruction."
+> "Layer 1 — MCP Exposure Control: Hermes hanya memuat 4 business capabilities. Layer 2 — Backend State-Transition Enforcement: Backend memvalidasi status sebelum menjalankan effects. Layer 3 — Human Approval: Manusia memegang keputusan final."
+
+> "Boundary ini berasal dari capability separation, bukan hanya prompt instruction."
 
 ---
 
@@ -171,8 +175,10 @@ PENDING APPROVAL
 **[SLIDE: 5] — Boundary: pending_approval**
 
 > "Sampai sini AI berhenti."
->
+
 > "Status: pending_approval. Tidak ada stock deduction. Tidak ada transaksi final. Order menunggu persetujuan manusia."
+
+> "Di MCP tool registry, tidak ada approve_order, deduct_stock, send_customer_message. Ini bukan kebetulan — ini design decision."
 
 ---
 
@@ -180,7 +186,11 @@ PENDING APPROVAL
 
 **[SLIDE: 6] — Human approval flow**
 
-> "Di sini keputusan transaksional berpindah ke manusia. Agent tidak memiliki capability untuk melakukan approval."
+> "Di sini keputusan transaksional berpindah ke manusia. Approval adalah backend operation yang dipicu dari human approval flow."
+
+> "Backend enforce state-transition: hanya order berstatus pending_approval yang bisa bertransisi. Double approval tidak mungkin karena atomic update."
+
+> "Honest note: endpoint approval saat ini belum memiliki authentication. Yang di-enforce adalah state-transition validity, bukan identity-level authorization."
 
 ---
 
@@ -273,10 +283,10 @@ agent  | NOTIFY_CUSTOMER      | None -> sent
 > "Entry 2: human — APPROVE_ORDER. Manusia approve via UI."
 >
 > "Entry 3: agent — DEDUCT_STOCK. Backend deduct stock setelah approval."
->
+
 > "Entry 4: agent — NOTIFY_CUSTOMER. Backend kirim notification setelah approval."
->
-> "Perhatikan: actor untuk DEDUCT_STOCK dan NOTIFY_CUSTOMER adalah agent, karena dieksekusi oleh backend flow setelah human approval. Tapi capability untuk deduct_stock dan send_customer_message tidak tersedia di MCP tool registry."
+
+> "Actor agent untuk DEDUCT_STOCK dan NOTIFY_CUSTOMER merepresentasikan origin workflow — backend mengeksekusi side effects atas otorisasi human approval. Physical executor adalah backend, logical origin adalah agent workflow."
 
 ---
 
@@ -296,7 +306,9 @@ Available tools:
 ✗ send_customer_message
 ```
 
-> "Bukan karena prompt-nya melarang agent. Tool-nya memang tidak tersedia."
+> "Bukan karena prompt-nya melarang agent. Tool-nya memang tidak ada di MCP registry."
+
+> "Honest limitation: agent memiliki akses ke execute_code dan terminal. Secara teknis, agent bisa gunakan Python atau curl untuk HTTP request langsung ke backend. Ini known limitation — MCP boundary adalah model-awareness layer, bukan absolute security boundary. Security boundary yang sebenarnya ada di backend state-transition enforcement."
 
 ---
 
@@ -313,7 +325,7 @@ Available tools:
 
 **Narasi:**
 
-> "Sekarang saya coba minta agent untuk approve order. Perhatikan: agent mencari tool approve_order. Tool tidak tersedia. Agent gagal. Bukan karena prompt melarang. Capability-nya memang tidak ada."
+> "Sekarang saya coba minta agent untuk approve order. Perhatikan: agent mencari tool approve_order. Tool tidak tersedia di MCP registry. Agent tidak bisa approve melalui business tools."
 
 ---
 
@@ -334,7 +346,7 @@ Available tools:
 - [ ] Browser fullscreen (F11)
 - [ ] Zoom 100% (Ctrl+0)
 - [ ] Resolution 1920x1080
-- [ ] PPT file: `video-demo/TuntasUMKM-HackFest2026-v5.pptx`
+- [ ] PPT file: `video-demo/TuntasUMKM-HackFest2026-v6.pptx`
 - [ ] Script: `video-demo/speaker-script.md`
 - [ ] No secrets visible di screen
 - [ ] No .env files visible
