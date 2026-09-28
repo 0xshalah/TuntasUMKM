@@ -124,6 +124,24 @@ Setiap slide punya **dua bagian yang jelas terpisah**:
 
 ---
 
+### [DEMO] — Tampilkan UI approval flow (3:30 - 3:45)
+
+**Action:** Buka browser ke `http://localhost:3000`, tunjukkan approval queue.
+
+**Langkah:**
+1. Pastikan frontend sudah running di port 3000
+2. Buka Chrome/Edge ke `http://localhost:3000`
+3. Tunjukkan approval queue — order pending_approval muncul di sini
+4. Klik salah satu order untuk buka detail
+5. Tunjukkan tombol "Approve" dan "Reject"
+6. Tunjukkan konsekuensi approval: stock deduction, notification, audit trail
+
+**Narasi:**
+
+> "Ini dashboard TuntasUMKM. Order yang dibuat agent muncul di sini dengan status pending_approval. Pemilik UMKM bisa review detail order, lalu approve atau reject. Keputusan ini yang menentukan apakah transaksi dilanjutkan."
+
+---
+
 ## SLIDE 5 — MCP TOOLS (3:45 - 4:30)
 
 **[SLIDE: 5] — MCP tools: 4 tool cards + P2.5 usage**
@@ -135,6 +153,23 @@ Setiap slide punya **dua bagian yang jelas terpisah**:
 > "Pada execution P2.5 yang sudah kita verifikasi, agent hanya menggunakan search_catalog dan create_order_draft. check_inventory dan calculate_order_total tersedia tapi tidak digunakan."
 >
 > "Agent memilih tool berdasarkan intent dan reasoning — bukan hardcoded sequence."
+
+---
+
+### [DEMO] — Tampilkan MCP execution di terminal (4:15 - 4:30)
+
+**Action:** Buka terminal, jalankan Hermes agent dengan prompt sederhana.
+
+**Langkah:**
+1. Buka terminal baru
+2. Jalankan: `hermes chat -q "Saya mau pesan Sarung Tenun Samarinda 1 pcs"`
+3. Tunjukkan agent memanggil `search_catalog` → `create_order_draft`
+4. Tunjukkan order ID yang dihasilkan
+5. Buka browser ke `http://localhost:3000` — order baru muncul di approval queue
+
+**Narasi:**
+
+> "Ini live execution. Agent menerima intent, mencari produk via MCP, lalu membuat draft order. Order baru langsung muncul di dashboard dengan status pending_approval."
 
 ---
 
@@ -152,7 +187,24 @@ Setiap slide punya **dua bagian yang jelas terpisah**:
 
 ---
 
-### [DEMO] — Tampilkan evidence langsung di terminal (4:50 - 5:15)
+### [DEMO] — Tampilkan UI aplikasi (dashboard) (4:50 - 5:05)
+
+**Action:** Buka browser ke `http://localhost:3000`, tunjukkan order detail.
+
+**Langkah:**
+1. Buka Chrome/Edge ke `http://localhost:3000`
+2. Klik order `ORD-20260927-35BD8E` di approval queue
+3. Tunjukkan order detail: product, SKU, quantity, price, status
+4. Scroll ke audit trail section — tunjukkan 4 entries
+5. Tunjukkan stock information
+
+**Narasi:**
+
+> "Ini dashboard TuntasUMKM. Order yang sudah diapprove muncul di sini. Kita bisa lihat detail order, stock, dan audit trail lengkap."
+
+---
+
+### [DEMO] — Tampilkan evidence langsung di terminal (5:05 - 5:15)
 
 **Action:** Buka terminal, jalankan query SQLite langsung dari database.
 
@@ -197,6 +249,24 @@ human  | APPROVE_ORDER        | pending_approval -> approved
 agent  | DEDUCT_STOCK         | 3 -> 2
 agent  | NOTIFY_CUSTOMER      | None -> sent
 ```
+
+---
+
+### [DEMO] — Tampilkan UI aplikasi (dashboard) (5:05 - 5:15)
+
+**Action:** Buka browser ke `http://localhost:3000`, tunjukkan approval queue.
+
+**Langkah:**
+1. Pastikan frontend sudah running di port 3000
+2. Buka Chrome/Edge ke `http://localhost:3000`
+3. Tunjukkan dashboard dengan approval queue
+4. Klik order `ORD-20260927-35BD8E` di queue
+5. Tunjukkan order detail: product, SKU, quantity, price, status
+6. Scroll ke audit trail section — tunjukkan 4 entries
+
+**Narasi:**
+
+> "Ini dashboard TuntasUMKM. Order yang sudah diapprove muncul di sini. Kita bisa lihat detail order, stock, dan audit trail lengkap."
 
 ---
 
@@ -303,30 +373,17 @@ agent  | NOTIFY_CUSTOMER      | None -> sent
 | 0:30 - 1:15 | SLIDE 1 | Problem flow diagram |
 | 1:15 - 2:15 | SLIDE 2 | Architecture diagram |
 | 2:15 - 3:00 | SLIDE 3 | Bounded authority zones |
-| 3:00 - 3:45 | SLIDE 4 | HITL flow diagram |
-| 3:45 - 4:30 | SLIDE 5 | MCP tools cards |
+| 3:00 - 3:30 | SLIDE 4 | HITL flow diagram |
+| 3:30 - 3:45 | DEMO | UI dashboard — approval queue |
+| 3:45 - 4:15 | SLIDE 5 | MCP tools cards |
+| 4:15 - 4:30 | DEMO | Terminal — live MCP execution |
 | 4:30 - 4:50 | SLIDE 6 | Evidence cards |
-| 4:50 - 5:15 | DEMO | Terminal with live DB query |
+| 4:50 - 5:05 | DEMO | UI dashboard — order detail |
+| 5:05 - 5:15 | DEMO | Terminal — live DB query |
 | 5:15 - 6:00 | SLIDE 7 | Audit timeline |
 | 6:00 - 6:45 | SLIDE 8 | Security boundary |
 | 6:45 - 7:15 | SLIDE 9 | Comparison table |
 | 7:15 - 7:45 | SLIDE 10 | Closing slide |
-
----
-
-## DASHBOARD DEMO — UNTUK SCENE 4-5 (Optional)
-
-Jika ingin menunjukkan dashboard langsung untuk HITL flow:
-
-1. Buka browser ke `http://localhost:3000`
-2. Klik salah satu order di approval queue
-3. Tunjukkan order detail, stock, dan audit trail
-4. Klik "Approve" button
-5. Tunjukkan confirmation dialog
-6. Klik "Confirm"
-7. Tunjukkan status berubah ke "approved"
-
-**Note:** Gunakan order existing di dashboard. Jangan buat order baru kecuali memang diperlukan untuk recording.
 
 ---
 
