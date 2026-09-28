@@ -16,7 +16,7 @@
     {
       "layout": "architecture_3layer",
       "title": "Architecture: 3-Layer Boundary",
-      "subtitle": "MCP Exposure + Backend Authorization + Human Approval",
+      "subtitle": "MCP Exposure + Backend Enforcement + Human Approval",
       "notes": "Layer 1 — MCP Exposure Control: Hermes hanya memuat 4 business capabilities. Layer 2 — Backend State-Transition Enforcement: Backend memvalidasi status sebelum menjalankan effects. Layer 3 — Human Approval: Manusia memegang keputusan final. Boundary berasal dari capability separation, bukan hanya prompt instruction."
     },
     {

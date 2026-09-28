@@ -267,7 +267,7 @@ def attack_boundary_slide(prs, spec):
         16, RED)
     add_rect(slide, 0.8, 4.8, 11.7, 1.5, "1a1a1a", border=AMBER)
     add_text(slide, 1.0, 5.0, 11.0, 1.0,
-        "\"Bukan karena prompt-nya melarang agent.\nTool-nya memang not available.\"",
+        "\"Bukan karena prompt-nya melarang agent.\nTool-nya memang tidak ada di MCP registry.\"",
         24, AMBER, True, PP_ALIGN.CENTER)
     if spec.get("notes"):
         add_notes(slide, spec["notes"])
