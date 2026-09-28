@@ -21,7 +21,7 @@
       "notes": "TuntasUMKM menggunakan AI Agent untuk bagian yang membutuhkan tool use, tetapi mempertahankan human approval pada transaction gate."
     },
     {
-      "layout": "title_content",
+      "layout": "architecture",
       "title": "Architecture",
       "bullets": [
         "User → Hermes Agent → MCP → Bounded Tools → Order Draft",
