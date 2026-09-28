@@ -54,111 +54,71 @@ Setiap slide punya **dua bagian yang jelas terpisah**:
 
 ---
 
-## SLIDE 0 — TITLE (0:00 - 0:30)
+## SCENE 0 — HOOK (0:00 - 0:30)
 
 **[SLIDE: 0] — Title slide TUNTASUMKM**
 
-> "Halo, selamat datang di demo TuntasUMKM. Nama saya Shalahuddin, dan saya akan mendemonstrasikan AI Agent-assisted order management untuk UMKM dengan bounded authority dan Human-in-the-Loop approval."
+> "Masalahnya bukan AI bisa membuat order. Masalahnya adalah: berapa banyak akses yang seharusnya kita berikan ke AI sebelum AI bisa menghabiskan uang, mengubah stok, atau mengirim sesuatu ke customer?"
 >
-> "TuntasUMKM adalah sistem pemesanan yang menggunakan AI Agent untuk memahami intent customer, mencari produk, dan membuat draft order — tetapi keputusan transaksional tetap di tangan manusia."
->
-> "Mari kita lihat masalahnya."
+> "Di TuntasUMKM, AI boleh mencari, menghitung, dan membuat draft. Tapi AI tidak boleh menyelesaikan transaksi."
 
 ---
 
-## SLIDE 1 — THE PROBLEM (0:30 - 1:15)
+## SCENE 1 — SOLUTION (0:30 - 1:00)
 
-**[SLIDE: 1] — Problem flow: Channels -> Chaos -> Solution**
+**[SLIDE: 1] — Solution positioning**
 
-> "UMKM menerima pesanan dari berbagai channel — WhatsApp, Instagram, Tokopedia. Setiap channel punya format berbeda, dan proses manual membuat pemilik UMKM kewalahan."
+> "TuntasUMKM adalah AI-assisted order management, bukan AI-autonomous."
 >
-> "Automation bisa membantu memahami dan menyiapkan pesanan. Tapi keputusan transaksional — seperti approve order, deduct stock, kirim WhatsApp — membutuhkan kontrol yang jelas."
->
-> "AI chatbot biasa bisa menghasilkan jawaban, tapi tidak bisa menjalankan workflow bisnis secara aman."
->
-> "Solusinya: AI Agent dengan bounded authority dan Human-in-the-Loop."
+> "AI Agent menerima intent customer, mencari produk, membuat draft order. Manusia memegang transaction gate. Backend menjalankan side effects. Semua diaudit."
 
 ---
 
-## SLIDE 2 — ARCHITECTURE (1:15 - 2:15)
+## SCENE 2 — ARCHITECTURE (1:00 - 1:30)
 
 **[SLIDE: 2] — Architecture diagram: flow + capability panel**
 
-> "Ini arsitektur TuntasUMKM. Customer mengirim pesan — misalnya 'Saya mau pesan Sarung Tenun Samarinda 1 pcs'."
+> "Ini arsitektur TuntasUMKM. Customer mengirim pesan. Hermes Agent menerima intent. Agent menggunakan bounded business tools untuk mencari produk dan membuat draft."
 >
-> "Hermes Agent menerima intent, lalu menggunakan MCP — Model Context Protocol — untuk mengakses bounded business tools."
->
-> "Agent bisa: search_catalog, check_inventory, calculate_order_total, dan create_order_draft."
->
-> "Agent TIDAK bisa: approve_order, reject_order, deduct_stock, send_customer_message. Semua transaksi final membutuhkan persetujuan manusia."
->
-> "Setelah agent membuat draft, order masuk status pending_approval. Manusia review dan approve. Backend menjalankan transaction effect dan mencatat audit trail."
+> "Agent TIDAK punya tool untuk approve, reject, deduct stock, atau send message. Authority boundary berasal dari capability access, bukan prompt instruction."
 
 ---
 
-## SLIDE 3 — BOUNDED AUTHORITY (2:15 - 3:00)
+## SCENE 3 — USER INTENT (1:30 - 2:15)
 
-**[SLIDE: 3] — Bounded authority: Agent zone vs Human zone**
+**[SLIDE: 3] — User intent**
 
-> "Ini yang membuat TuntasUMKM berbeda. Agent punya authority zone yang jelas — bisa query data bisnis dan membuat draft order, tapi berhenti di approval gate."
+> "Customer mengirim pesan: 'Saya mau pesan Sarung Tenun Samarinda 1 pcs'."
 >
-> "Human authority zone: approve atau reject order, deduct stock, send customer message. Semua keputusan transaksional ada di sini."
->
-> "Agent tidak bisa override keputusan manusia. Agent tidak bisa langsung mutate database. Agent tidak bisa commit transaksi."
->
-> "Ini bukan fully autonomous AI. Ini AI-assisted dengan human control."
+> "Agent menerima intent ini dan mulai bekerja."
 
 ---
 
-## SLIDE 4 — HUMAN-IN-THE-LOOP (3:00 - 3:45)
+## SCENE 4 — AGENT EXECUTION (2:15 - 3:15)
 
-**[SLIDE: 4] — HITL flow: Agent -> Human -> Backend**
+**[SLIDE: 4] — Agent execution flow**
 
-> "Ini alur Human-in-the-Loop. Agent membuat draft order dengan status pending_approval. Tidak ada stock deduction, tidak ada transaksi final."
->
-> "Manusia review order detail di dashboard. Manusia approve atau reject. Keputusan manusia final."
->
-> "Setelah approval, backend menjalankan: deduct stock, send customer notification, write audit log. Semua dalam satu transactional commit."
->
-> "Agent tidak pernah menyentuh transaction lifecycle."
+```
+USER INTENT
+    ↓
+search_catalog
+    ↓
+check_inventory
+    ↓
+calculate_order_total
+    ↓
+create_order_draft
+    ↓
+PENDING APPROVAL
+```
 
----
-
-### [DEMO] — Tampilkan UI approval flow (3:30 - 3:45)
-
-**Action:** Buka browser ke `http://localhost:3000`, tunjukkan approval queue.
-
-**Langkah:**
-1. Pastikan frontend sudah running di port 3000
-2. Buka Chrome/Edge ke `http://localhost:3000`
-3. Tunjukkan approval queue — order pending_approval muncul di sini
-4. Klik salah satu order untuk buka detail
-5. Tunjukkan tombol "Approve" dan "Reject"
-6. Tunjukkan konsekuensi approval: stock deduction, notification, audit trail
-
-**Narasi:**
-
-> "Ini dashboard TuntasUMKM. Order yang dibuat agent muncul di sini dengan status pending_approval. Pemilik UMKM bisa review detail order, lalu approve atau reject. Keputusan ini yang menentukan apakah transaksi dilanjutkan."
+> "Agent memanggil tools secara sequential. Perhatikan output terakhir: bukan approved order. Agent berhenti di draft."
 
 ---
 
-## SLIDE 5 — MCP TOOLS (3:45 - 4:30)
+### [DEMO] — Live MCP execution (2:45 - 3:15)
 
-**[SLIDE: 5] — MCP tools: 4 tool cards + P2.5 usage**
-
-> "Ini 4 MCP tools yang tersedia untuk agent. Tiga read-only: search_catalog, check_inventory, calculate_order_total. Satu bounded write: create_order_draft."
->
-> "create_order_draft hanya membuat order dengan status pending_approval. Tidak ada stock deduction, tidak ada approval, tidak ada WhatsApp."
->
-> "Pada execution P2.5 yang sudah kita verifikasi, agent hanya menggunakan search_catalog dan create_order_draft. check_inventory dan calculate_order_total tersedia tapi tidak digunakan."
->
-> "Agent memilih tool berdasarkan intent dan reasoning — bukan hardcoded sequence."
-
----
-
-### [DEMO] — Tampilkan MCP execution di terminal (4:15 - 4:30)
-
-**Action:** Buka terminal, jalankan Hermes agent dengan prompt sederhana.
+**Action:** Buka terminal, jalankan Hermes agent.
 
 **Langkah:**
 1. Buka terminal baru
@@ -169,44 +129,61 @@ Setiap slide punya **dua bagian yang jelas terpisah**:
 
 **Narasi:**
 
-> "Ini live execution. Agent menerima intent, mencari produk via MCP, lalu membuat draft order. Order baru langsung muncul di dashboard dengan status pending_approval."
+> "Ini live execution. Agent menerima intent, mencari produk, membuat draft order. Order baru langsung muncul di dashboard dengan status pending_approval."
 
 ---
 
-## SLIDE 6 — VERIFIED DEMO EVIDENCE (4:30 - 5:15)
+## SCENE 5 — THE BOUNDARY (3:15 - 3:45)
 
-**[SLIDE: 6] — Evidence: order card + stock transition + audit**
+**[SLIDE: 5] — Boundary: pending_approval**
 
-> "Ini evidence dari P2.5 execution yang sudah diverifikasi. Order ID: ORD-20260927-35BD8E. Product: Sarung Tenun Samarinda, SKU: SRG-TNN-04, quantity 1, price Rp 520.000."
+> "Sampai sini AI berhenti."
 >
-> "Pre-approval: status pending_approval, stock masih 3. Human approval: YES. Post-approval: stock 3 menjadi 2."
->
-> "Audit trail: 4 entries. Agent create_draft, human APPROVE_ORDER, agent DEDUCT_STOCK, agent NOTIFY_CUSTOMER."
->
-> "Semua tercatat. Semua bisa diaudit."
+> "Status: pending_approval. Tidak ada stock deduction. Tidak ada transaksi final. Order menunggu persetujuan manusia."
 
 ---
 
-### [DEMO] — Tampilkan UI aplikasi (dashboard) (4:50 - 5:05)
+## SCENE 6 — HUMAN APPROVAL (3:45 - 4:45)
 
-**Action:** Buka browser ke `http://localhost:3000`, tunjukkan order detail.
+**[SLIDE: 6] — Human approval flow**
+
+> "Di sini keputusan transaksional berpindah ke manusia. Agent tidak memiliki capability untuk melakukan approval."
+
+---
+
+### [DEMO] — UI dashboard approval (4:00 - 4:45)
+
+**Action:** Buka browser ke `http://localhost:3000`, tunjukkan approval flow.
 
 **Langkah:**
 1. Buka Chrome/Edge ke `http://localhost:3000`
-2. Klik order `ORD-20260927-35BD8E` di approval queue
+2. Klik order yang baru dibuat agent di approval queue
 3. Tunjukkan order detail: product, SKU, quantity, price, status
-4. Scroll ke audit trail section — tunjukkan 4 entries
-5. Tunjukkan stock information
+4. Tunjukkan tombol "Approve" dan "Reject"
+5. Klik "Approve"
+6. Tunjukkan confirmation dialog dengan konsekuensi
+7. Klik "Confirm"
+8. Tunjukkan status berubah ke "approved"
 
 **Narasi:**
 
-> "Ini dashboard TuntasUMKM. Order yang sudah diapprove muncul di sini. Kita bisa lihat detail order, stock, dan audit trail lengkap."
+> "Ini dashboard TuntasUMKM. Order yang dibuat agent muncul di sini. Pemilik UMKM review detail order, lalu approve atau reject. Keputusan ini yang menentukan apakah transaksi dilanjutkan."
 
 ---
 
-### [DEMO] — Tampilkan evidence langsung di terminal (5:05 - 5:15)
+## SCENE 7 — REAL EFFECT (4:45 - 5:15)
 
-**Action:** Buka terminal, jalankan query SQLite langsung dari database.
+**[SLIDE: 7] — Stock transition: 5 → 4**
+
+> "Setelah human approval, backend menjalankan transaction effects."
+>
+> "Stock: 5 → 4. Customer notified. Audit trail tercatat."
+
+---
+
+### [DEMO] — Tampilkan evidence langsung di terminal (5:00 - 5:15)
+
+**Action:** Buka terminal, jalankan query SQLite.
 
 ```bash
 cd C:\Users\Shalahuddin\Downloads\tuntas-lagi-main\backend
@@ -234,9 +211,9 @@ for row in cur.fetchall():
 "
 ```
 
-**Narasi sambil terminal terbuka:**
+**Narasi:**
 
-> "Ini data langsung dari database. Order ini sudah approved. Stock sudah deducted dari 3 menjadi 2. Empat audit entries tercatat lengkap."
+> "Ini data langsung dari database. Order sudah approved. Stock sudah deducted. Empat audit entries tercatat lengkap."
 
 **Expected output:**
 ```
@@ -252,29 +229,11 @@ agent  | NOTIFY_CUSTOMER      | None -> sent
 
 ---
 
-### [DEMO] — Tampilkan UI aplikasi (dashboard) (5:05 - 5:15)
+## SCENE 8 — AUDIT TRAIL (5:15 - 6:00)
 
-**Action:** Buka browser ke `http://localhost:3000`, tunjukkan approval queue.
+**[SLIDE: 8] — Audit timeline: 4 entries with actor badges**
 
-**Langkah:**
-1. Pastikan frontend sudah running di port 3000
-2. Buka Chrome/Edge ke `http://localhost:3000`
-3. Tunjukkan dashboard dengan approval queue
-4. Klik order `ORD-20260927-35BD8E` di queue
-5. Tunjukkan order detail: product, SKU, quantity, price, status
-6. Scroll ke audit trail section — tunjukkan 4 entries
-
-**Narasi:**
-
-> "Ini dashboard TuntasUMKM. Order yang sudah diapprove muncul di sini. Kita bisa lihat detail order, stock, dan audit trail lengkap."
-
----
-
-## SLIDE 7 — AUDIT TRAIL (5:15 - 6:00)
-
-**[SLIDE: 7] — Audit timeline: 4 entries with actor badges**
-
-> "Ini audit trail lengkap. Empat entry dengan actor yang jelas."
+> "Empat entry audit trail. Setiap action tercatat dengan actor yang jelas."
 >
 > "Entry 1: agent — create_draft. Agent membuat draft order."
 >
@@ -288,45 +247,50 @@ agent  | NOTIFY_CUSTOMER      | None -> sent
 
 ---
 
-## SLIDE 8 — SECURITY & SAFETY (6:00 - 6:45)
+## SCENE 9 — ATTACK THE BOUNDARY (6:00 - 6:40)
 
-**[SLIDE: 8] — Security boundary: safe zone vs forbidden zone**
+**[SLIDE: 9] — Available vs Not Available tools**
 
-> "Ini security boundary. Agent boundary: read-only queries, create draft orders, stop at approval gate."
->
-> "Forbidden zone: direct database access, transactional commits, stock mutation, customer communication. Semua butuh human approval."
->
-> "Agent tidak bisa bypass approval. Agent tidak bisa inject SQL. Agent tidak bisa access database langsung."
->
-> "Ini design principle: least privilege, bounded authority, human gate."
+```
+Available tools:
+✓ search_catalog
+✓ check_inventory
+✓ calculate_order_total
+✓ create_order_draft
 
----
+✗ approve_order
+✗ deduct_stock
+✗ send_customer_message
+```
 
-## SLIDE 9 — WHY DIFFERENT (6:45 - 7:15)
-
-**[SLIDE: 9] — Comparison: chatbot vs agent**
-
-> "Kenapa ini berbeda dari chatbot biasa? Chatbot generates text responses. TuntasUMKM Agent menjalankan workflow bisnis."
->
-> "Chatbot: no tool integration, no business logic, no audit trail, cannot execute actions, no authority boundaries."
->
-> "TuntasUMKM Agent: tool-calling via MCP, bounded business tools, Human-in-the-Loop gate, full audit trail, executes draft creation, clear authority boundaries."
->
-> "Ini bukan AI yang bisa melakukan apa saja. Ini AI yang bisa melakukan hal yang tepat — dengan batas yang jelas."
+> "Bukan karena prompt-nya melarang agent. Tool-nya memang tidak tersedia."
 
 ---
 
-## SLIDE 10 — CLOSING (7:15 - 7:45)
+### [DEMO] — Coba minta agent approve order (6:15 - 6:40)
+
+**Action:** Buka terminal, minta agent untuk approve order.
+
+**Langkah:**
+1. Buka terminal baru
+2. Jalankan: `hermes chat -q "Approve order ORD-20260927-35BD8E"`
+3. Tunjukkan agent mencari tool approve_order
+4. Tunjukkan agent gagal karena tool tidak tersedia
+5. Tunjukkan agent tidak bisa bypass
+
+**Narasi:**
+
+> "Sekarang saya coba minta agent untuk approve order. Perhatikan: agent mencari tool approve_order. Tool tidak tersedia. Agent gagal. Bukan karena prompt melarang. Capability-nya memang tidak ada."
+
+---
+
+## SCENE 10 — CLOSING (6:40 - 7:00)
 
 **[SLIDE: 10] — Closing slide TUNTASUMKM**
 
-> "TuntasUMKM. AI Agent-assisted order management untuk UMKM."
->
-> "Bounded authority. Human-in-the-Loop. Full audit trail."
+> "TuntasUMKM tidak mencoba membuat AI melakukan semuanya. Kami membuat AI melakukan hal yang tepat, dan berhenti di tempat yang tepat."
 >
 > "Build Agent, Deliver Impact."
->
-> "Terima kasih."
 
 ---
 
@@ -347,21 +311,21 @@ agent  | NOTIFY_CUSTOMER      | None -> sent
 
 ## TIMING GUIDE
 
-| Slide | Title | Duration | Cumulative |
+| Scene | Title | Duration | Cumulative |
 |---|---|---|---|
-| 0 | Title | 0:30 | 0:00 |
-| 1 | The Problem | 0:45 | 0:30 |
-| 2 | Architecture | 1:00 | 1:15 |
-| 3 | Bounded Authority | 0:45 | 2:15 |
-| 4 | Human-in-the-Loop | 0:45 | 3:00 |
-| 5 | MCP Tools | 0:45 | 3:45 |
-| 6 | Verified Demo Evidence | 0:45 | 4:30 |
-| 7 | Audit Trail | 0:45 | 5:15 |
-| 8 | Security & Safety | 0:45 | 6:00 |
-| 9 | Why Different | 0:30 | 6:45 |
-| 10 | Closing | 0:30 | 7:15 |
+| 0 | Hook | 0:30 | 0:00 |
+| 1 | Solution | 0:30 | 0:30 |
+| 2 | Architecture | 0:30 | 1:00 |
+| 3 | User Intent | 0:45 | 1:30 |
+| 4 | Agent Execution | 1:00 | 2:15 |
+| 5 | The Boundary | 0:30 | 3:15 |
+| 6 | Human Approval | 1:00 | 3:45 |
+| 7 | Real Effect | 0:30 | 4:45 |
+| 8 | Audit Trail | 0:45 | 5:15 |
+| 9 | Attack the Boundary | 0:40 | 6:00 |
+| 10 | Closing | 0:20 | 6:40 |
 
-**Total: ~7:30 minutes**
+**Total: ~7:00 minutes**
 
 ---
 
@@ -370,22 +334,22 @@ agent  | NOTIFY_CUSTOMER      | None -> sent
 | Timestamp | Mode | What Viewer Sees |
 |---|---|---|
 | 0:00 - 0:30 | SLIDE 0 | Title slide |
-| 0:30 - 1:15 | SLIDE 1 | Problem flow diagram |
-| 1:15 - 2:15 | SLIDE 2 | Architecture diagram |
-| 2:15 - 3:00 | SLIDE 3 | Bounded authority zones |
-| 3:00 - 3:30 | SLIDE 4 | HITL flow diagram |
-| 3:30 - 3:45 | DEMO | UI dashboard — approval queue |
-| 3:45 - 4:15 | SLIDE 5 | MCP tools cards |
-| 4:15 - 4:30 | DEMO | Terminal — live MCP execution |
-| 4:30 - 4:50 | SLIDE 6 | Evidence cards |
-| 4:50 - 5:05 | DEMO | UI dashboard — order detail |
-| 5:05 - 5:15 | DEMO | Terminal — live DB query |
-| 5:15 - 6:00 | SLIDE 7 | Audit timeline |
-| 6:00 - 6:45 | SLIDE 8 | Security boundary |
-| 6:45 - 7:15 | SLIDE 9 | Comparison table |
-| 7:15 - 7:45 | SLIDE 10 | Closing slide |
+| 0:30 - 1:00 | SLIDE 1 | Solution positioning |
+| 1:00 - 1:30 | SLIDE 2 | Architecture diagram |
+| 1:30 - 2:15 | SLIDE 3 | User intent |
+| 2:15 - 2:45 | SLIDE 4 | Agent execution flow |
+| 2:45 - 3:15 | DEMO | Terminal — live MCP execution |
+| 3:15 - 3:45 | SLIDE 5 | Boundary: pending_approval |
+| 3:45 - 4:00 | SLIDE 6 | Human approval flow |
+| 4:00 - 4:45 | DEMO | UI dashboard — approval flow |
+| 4:45 - 5:00 | SLIDE 7 | Stock transition |
+| 5:00 - 5:15 | DEMO | Terminal — live DB query |
+| 5:15 - 6:00 | SLIDE 8 | Audit timeline |
+| 6:00 - 6:15 | SLIDE 9 | Available vs Not Available |
+| 6:15 - 6:40 | DEMO | Terminal — attack the boundary |
+| 6:40 - 7:00 | SLIDE 10 | Closing slide |
 
 ---
 
-*Script generated: 2026-09-27*
+*Script generated: 2026-09-28*
 *Project: TuntasUMKM — AI HackFest 2026*
