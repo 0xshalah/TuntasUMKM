@@ -33,18 +33,30 @@
 ### Untuk Recording
 - Buka browser di **fullscreen** (F11)
 - Zoom **100%** (Ctrl+0)
-- Resolution: **1920×1080**
+- Resolution: **1920x1080**
 - Browser: Chrome/Edge (recommended)
 
 ---
 
-## SPEAKING SCRIPT PER SLIDE
+## FORMAT SKIP
+
+Setiap slide punya **dua bagian yang jelas terpisah**:
+
+```
+[SLIDE: n]  →  Visual PPT yang ditampilkan di layar (baca ini)
+[DEMO]      →  Demonstrasi langsung (buka dashboard/terminal)
+```
+
+**Aturan:**
+- Mulai dengan visual PPT dulu untuk konteks
+- Lalu pindah ke demonstrasi langsung untuk evidence
+- Jangan gabungin — viewer butuh tahu kapan lihat slide, kapan lihat dashboard
 
 ---
 
-### SLIDE 0 — TITLE (0:00 - 0:30)
+## SLIDE 0 — TITLE (0:00 - 0:30)
 
-**[Visual: Title slide — TUNTASUMKM]**
+**[SLIDE: 0] — Title slide TUNTASUMKM**
 
 > "Halo, selamat datang di demo TuntasUMKM. Nama saya Shalahuddin, dan saya akan mendemonstrasikan AI Agent-assisted order management untuk UMKM dengan bounded authority dan Human-in-the-Loop approval."
 >
@@ -54,9 +66,9 @@
 
 ---
 
-### SLIDE 1 — THE PROBLEM (0:30 - 1:15)
+## SLIDE 1 — THE PROBLEM (0:30 - 1:15)
 
-**[Visual: Problem flow — Channels → Chaos → Solution]**
+**[SLIDE: 1] — Problem flow: Channels -> Chaos -> Solution**
 
 > "UMKM menerima pesanan dari berbagai channel — WhatsApp, Instagram, Tokopedia. Setiap channel punya format berbeda, dan proses manual membuat pemilik UMKM kewalahan."
 >
@@ -68,9 +80,9 @@
 
 ---
 
-### SLIDE 2 — ARCHITECTURE (1:15 - 2:15)
+## SLIDE 2 — ARCHITECTURE (1:15 - 2:15)
 
-**[Visual: Architecture diagram — flow + capability panel]**
+**[SLIDE: 2] — Architecture diagram: flow + capability panel**
 
 > "Ini arsitektur TuntasUMKM. Customer mengirim pesan — misalnya 'Saya mau pesan Sarung Tenun Samarinda 1 pcs'."
 >
@@ -84,9 +96,9 @@
 
 ---
 
-### SLIDE 3 — BOUNDED AUTHORITY (2:15 - 3:00)
+## SLIDE 3 — BOUNDED AUTHORITY (2:15 - 3:00)
 
-**[Visual: Bounded authority — Agent zone vs Human zone]**
+**[SLIDE: 3] — Bounded authority: Agent zone vs Human zone**
 
 > "Ini yang membuat TuntasUMKM berbeda. Agent punya authority zone yang jelas — bisa query data bisnis dan membuat draft order, tapi berhenti di approval gate."
 >
@@ -98,9 +110,9 @@
 
 ---
 
-### SLIDE 4 — HUMAN-IN-THE-LOOP (3:00 - 3:45)
+## SLIDE 4 — HUMAN-IN-THE-LOOP (3:00 - 3:45)
 
-**[Visual: HITL flow — Agent → Human → Backend]**
+**[SLIDE: 4] — HITL flow: Agent -> Human -> Backend**
 
 > "Ini alur Human-in-the-Loop. Agent membuat draft order dengan status pending_approval. Tidak ada stock deduction, tidak ada transaksi final."
 >
@@ -112,9 +124,9 @@
 
 ---
 
-### SLIDE 5 — MCP TOOLS (3:45 - 4:30)
+## SLIDE 5 — MCP TOOLS (3:45 - 4:30)
 
-**[Visual: MCP tools — 4 tool cards + P2.5 usage]**
+**[SLIDE: 5] — MCP tools: 4 tool cards + P2.5 usage**
 
 > "Ini 4 MCP tools yang tersedia untuk agent. Tiga read-only: search_catalog, check_inventory, calculate_order_total. Satu bounded write: create_order_draft."
 >
@@ -126,9 +138,9 @@
 
 ---
 
-### SLIDE 6 — VERIFIED DEMO EVIDENCE (4:30 - 5:15)
+## SLIDE 6 — VERIFIED DEMO EVIDENCE (4:30 - 5:15)
 
-**[Visual: Evidence — order card + stock transition + audit]**
+**[SLIDE: 6] — Evidence: order card + stock transition + audit**
 
 > "Ini evidence dari P2.5 execution yang sudah diverifikasi. Order ID: ORD-20260927-35BD8E. Product: Sarung Tenun Samarinda, SKU: SRG-TNN-04, quantity 1, price Rp 520.000."
 >
@@ -140,9 +152,57 @@
 
 ---
 
-### SLIDE 7 — AUDIT TRAIL (5:15 - 6:00)
+### [DEMO] — Tampilkan evidence langsung di terminal (4:50 - 5:15)
 
-**[Visual: Audit timeline — 4 entries with actor badges]**
+**Action:** Buka terminal, jalankan query SQLite langsung dari database.
+
+```bash
+cd C:\Users\Shalahuddin\Downloads\tuntas-lagi-main\backend
+.venv\Scripts\python.exe -c "
+import sqlite3
+conn = sqlite3.connect('tuntas.db')
+cur = conn.cursor()
+
+# Order detail
+cur.execute(\"SELECT id, status, total_price FROM orders WHERE id='ORD-20260927-35BD8E'\")
+row = cur.fetchone()
+print(f'Order: {row[0]}')
+print(f'Status: {row[1]}')
+print(f'Total: Rp {row[2]:,}')
+
+# Stock transition
+cur.execute(\"SELECT stock FROM inventory WHERE sku='SRG-TNN-04'\")
+stock = cur.fetchone()[0]
+print(f'Current stock SRG-TNN-04: {stock}')
+
+# Audit trail
+cur.execute(\"SELECT actor, action, before_state, after_state FROM audit_logs WHERE order_id='ORD-20260927-35BD8E' ORDER BY at\")
+for row in cur.fetchall():
+    print(f'{row[0]:6} | {row[1]:20} | {row[2]} -> {row[3]}')
+"
+```
+
+**Narasi sambil terminal terbuka:**
+
+> "Ini data langsung dari database. Order ini sudah approved. Stock sudah deducted dari 3 menjadi 2. Empat audit entries tercatat lengkap."
+
+**Expected output:**
+```
+Order: ORD-20260927-35BD8E
+Status: approved
+Total: Rp 520,000
+Current stock SRG-TNN-04: 2
+agent  | create_draft         | None -> pending_approval
+human  | APPROVE_ORDER        | pending_approval -> approved
+agent  | DEDUCT_STOCK         | 3 -> 2
+agent  | NOTIFY_CUSTOMER      | None -> sent
+```
+
+---
+
+## SLIDE 7 — AUDIT TRAIL (5:15 - 6:00)
+
+**[SLIDE: 7] — Audit timeline: 4 entries with actor badges**
 
 > "Ini audit trail lengkap. Empat entry dengan actor yang jelas."
 >
@@ -158,9 +218,9 @@
 
 ---
 
-### SLIDE 8 — SECURITY & SAFETY (6:00 - 6:45)
+## SLIDE 8 — SECURITY & SAFETY (6:00 - 6:45)
 
-**[Visual: Security boundary — safe zone vs forbidden zone]**
+**[SLIDE: 8] — Security boundary: safe zone vs forbidden zone**
 
 > "Ini security boundary. Agent boundary: read-only queries, create draft orders, stop at approval gate."
 >
@@ -172,9 +232,9 @@
 
 ---
 
-### SLIDE 9 — WHY DIFFERENT (6:45 - 7:15)
+## SLIDE 9 — WHY DIFFERENT (6:45 - 7:15)
 
-**[Visual: Comparison — chatbot vs agent]**
+**[SLIDE: 9] — Comparison: chatbot vs agent**
 
 > "Kenapa ini berbeda dari chatbot biasa? Chatbot generates text responses. TuntasUMKM Agent menjalankan workflow bisnis."
 >
@@ -186,9 +246,9 @@
 
 ---
 
-### SLIDE 10 — CLOSING (7:15 - 7:45)
+## SLIDE 10 — CLOSING (7:15 - 7:45)
 
-**[Visual: Closing slide — TUNTASUMKM]**
+**[SLIDE: 10] — Closing slide TUNTASUMKM**
 
 > "TuntasUMKM. AI Agent-assisted order management untuk UMKM."
 >
@@ -206,7 +266,7 @@
 - [ ] Frontend running di port 3000
 - [ ] Browser fullscreen (F11)
 - [ ] Zoom 100% (Ctrl+0)
-- [ ] Resolution 1920×1080
+- [ ] Resolution 1920x1080
 - [ ] PPT file: `video-demo/TuntasUMKM-HackFest2026-v4.pptx`
 - [ ] Script: `video-demo/speaker-script.md`
 - [ ] No secrets visible di screen
@@ -232,3 +292,43 @@
 | 10 | Closing | 0:30 | 7:15 |
 
 **Total: ~7:30 minutes**
+
+---
+
+## SLIDE vs DEMO REFERENCE
+
+| Timestamp | Mode | What Viewer Sees |
+|---|---|---|
+| 0:00 - 0:30 | SLIDE 0 | Title slide |
+| 0:30 - 1:15 | SLIDE 1 | Problem flow diagram |
+| 1:15 - 2:15 | SLIDE 2 | Architecture diagram |
+| 2:15 - 3:00 | SLIDE 3 | Bounded authority zones |
+| 3:00 - 3:45 | SLIDE 4 | HITL flow diagram |
+| 3:45 - 4:30 | SLIDE 5 | MCP tools cards |
+| 4:30 - 4:50 | SLIDE 6 | Evidence cards |
+| 4:50 - 5:15 | DEMO | Terminal with live DB query |
+| 5:15 - 6:00 | SLIDE 7 | Audit timeline |
+| 6:00 - 6:45 | SLIDE 8 | Security boundary |
+| 6:45 - 7:15 | SLIDE 9 | Comparison table |
+| 7:15 - 7:45 | SLIDE 10 | Closing slide |
+
+---
+
+## DASHBOARD DEMO — UNTUK SCENE 4-5 (Optional)
+
+Jika ingin menunjukkan dashboard langsung untuk HITL flow:
+
+1. Buka browser ke `http://localhost:3000`
+2. Klik salah satu order di approval queue
+3. Tunjukkan order detail, stock, dan audit trail
+4. Klik "Approve" button
+5. Tunjukkan confirmation dialog
+6. Klik "Confirm"
+7. Tunjukkan status berubah ke "approved"
+
+**Note:** Gunakan order existing di dashboard. Jangan buat order baru kecuali memang diperlukan untuk recording.
+
+---
+
+*Script generated: 2026-09-27*
+*Project: TuntasUMKM — AI HackFest 2026*
