@@ -4,127 +4,89 @@
     {
       "layout": "title",
       "title": "TUNTASUMKM",
-      "subtitle": "AI Agent-assisted order management\nwith bounded authority and Human-in-the-Loop approval",
-      "background": "0a0a0a",
-      "notes": "UMKM menerima pesanan dari berbagai channel. Automation dapat membantu — tetapi keputusan transaksional membutuhkan kontrol yang jelas."
+      "subtitle": "AI Agent-assisted order management for UMKM\nwith bounded authority and Human-in-the-Loop approval",
+      "notes": "Masalahnya bukan AI bisa membuat order. Masalahnya adalah: berapa banyak akses yang seharusnya kita berikan ke AI sebelum AI bisa menghabiskan uang, mengubah stok, atau mengirim sesuatu ke customer?"
     },
     {
-      "layout": "problem",
-      "title": "The Problem",
+      "layout": "solution",
+      "title": "Solution: AI-Assisted, Not AI-Autonomous",
+      "subtitle": "TuntasUMKM positioning",
       "bullets": [
-        "UMKM menerima pesanan dari berbagai channel — WhatsApp, Instagram, Tokopedia",
-        "Automation dapat membantu memahami dan menyiapkan pesanan",
-        "Keputusan transaksional membutuhkan kontrol yang jelas",
-        "AI chatbot biasa menghasilkan jawaban, bukan menjalankan workflow bisnis"
+        "AI Agent receives customer intent",
+        "AI Agent searches products and creates draft order",
+        "Human holds the transaction gate",
+        "Backend executes side effects after approval",
+        "Everything is auditable"
       ],
-      "background": "0a0a0a",
-      "notes": "TuntasUMKM menggunakan AI Agent untuk bagian yang membutuhkan tool use, tetapi mempertahankan human approval pada transaction gate."
+      "notes": "TuntasUMKM adalah AI-assisted order management, bukan AI-autonomous. AI Agent menerima intent customer, mencari produk, membuat draft order. Manusia memegang transaction gate. Backend menjalankan side effects. Semua diaudit."
     },
     {
       "layout": "architecture",
-      "title": "Architecture",
-      "bullets": [
-        "User → Hermes Agent → MCP → Bounded Tools → Order Draft",
-        "Human Approval → Backend Transaction → Audit Trail",
-        "Agent tidak memiliki akses langsung ke database atau fungsi transaksi berisiko tinggi"
-      ],
-      "background": "0a0a0a",
-      "notes": "Hermes Agent menjadi reasoning dan tool-use runtime. MCP menjadi capability boundary untuk tools yang diberikan kepada agent."
+      "title": "Architecture: Authority Boundary",
+      "subtitle": "Capability-based boundary, not prompt-based",
+      "notes": "Ini arsitektur TuntasUMKM. Customer mengirim pesan. Hermes Agent menerima intent. Agent menggunakan bounded business tools untuk mencari produk dan membuat draft. Agent TIDAK punya tool untuk approve, reject, deduct stock, atau send message. Authority boundary berasal dari capability access, bukan prompt instruction."
     },
     {
-      "layout": "bounded_authority",
-      "title": "Bounded Authority",
+      "layout": "user_intent",
+      "title": "User Intent",
+      "subtitle": "Customer message",
       "bullets": [
-        "Available: search_catalog, check_inventory, calculate_order_total, create_order_draft",
-        "Not Available: approve_order, reject_order, deduct_stock, send_customer_message",
-        "Agent tidak memiliki capability langsung untuk melakukan transaksi berisiko tinggi"
+        "\"Saya mau pesan Sarung Tenun Samarinda 1 pcs\""
       ],
-      "background": "0a0a0a",
-      "notes": "Agent memiliki kewenangan yang dibatasi. Transaction authority tetap berada pada backend + human approval."
+      "notes": "Customer mengirim pesan: Saya mau pesan Sarung Tenun Samarinda 1 pcs. Agent menerima intent ini dan mulai bekerja."
     },
     {
-      "layout": "hitl",
-      "title": "Human-in-the-Loop",
-      "bullets": [
-        "Agent membuat draft order (status: pending_approval)",
-        "Human melihat confirmation dialog dengan detail order dan konsekuensi",
-        "Human melakukan approval melalui dashboard UI",
-        "Backend menjalankan stock deduction",
-        "Audit trail mencatat: agent → human → agent (downstream effects)"
-      ],
-      "background": "0a0a0a",
-      "notes": "Human approval bukan sekadar UI decoration. Approval adalah transaction gate."
+      "layout": "agent_execution",
+      "title": "Agent Execution",
+      "subtitle": "Sequential tool calls",
+      "notes": "Agent memanggil tools secara sequential. Perhatikan output terakhir: bukan approved order. Agent berhenti di draft."
     },
     {
-      "layout": "mcp_tools",
-      "title": "MCP Tools",
+      "layout": "boundary",
+      "title": "The Boundary",
+      "subtitle": "Agent stops here",
       "bullets": [
-        "search_catalog — Search product catalog by name, SKU, or keyword",
-        "check_inventory — Check current stock for a specific product",
-        "calculate_order_total — Calculate total price for a proposed order",
-        "create_order_draft — Create pending order draft (no stock deduction, no approval)"
+        "Status: pending_approval",
+        "No stock deduction",
+        "No transaction final",
+        "Order menunggu persetujuan manusia"
       ],
-      "background": "0a0a0a",
-      "notes": "Keempat tools tersebut AVAILABLE. Tidak semua tools dipanggil pada setiap workflow. Agent memilih tools yang diperlukan berdasarkan intent."
+      "notes": "Sampai sini AI berhenti. Status: pending_approval. Tidak ada stock deduction. Tidak ada transaksi final. Order menunggu persetujuan manusia."
     },
     {
-      "layout": "evidence",
-      "title": "Verified Demo Evidence",
+      "layout": "human_approval",
+      "title": "Human Approval",
+      "subtitle": "Transaction gate",
+      "notes": "Di sini keputusan transaksional berpindah ke manusia. Agent tidak memiliki capability untuk melakukan approval."
+    },
+    {
+      "layout": "real_effect",
+      "title": "Real Effect",
+      "subtitle": "Stock transition after approval",
       "bullets": [
-        "Order ID: ORD-20260927-35BD8E",
-        "Product: Sarung Tenun Samarinda (SKU: SRG-TNN-04)",
-        "Quantity: 1 | Price: Rp 520.000",
-        "Stock: 3 → 2 | Deduction: 1",
-        "Human approval: YES | Audit entries: 4",
-        "Agent tools used: search_catalog, create_order_draft"
+        "Stock: 5 → 4",
+        "Customer notified",
+        "Audit trail recorded"
       ],
-      "background": "0a0a0a",
-      "notes": "Audit trail: agent create_draft, human APPROVE_ORDER, agent DEDUCT_STOCK, agent NOTIFY_CUSTOMER."
+      "notes": "Setelah human approval, backend menjalankan transaction effects. Stock: 5 → 4. Customer notified. Audit trail tercatat."
     },
     {
       "layout": "audit",
       "title": "Audit Trail",
-      "bullets": [
-        "01 — agent: create_draft → pending_approval",
-        "02 — human: APPROVE_ORDER → approved",
-        "03 — agent: DEDUCT_STOCK → deducted",
-        "04 — agent: NOTIFY_CUSTOMER → sent"
-      ],
-      "background": "0a0a0a",
-      "notes": "Audit trail mencatat bukan hanya apa yang terjadi, tetapi juga actor yang tercatat pada setiap tahap."
+      "subtitle": "4 entries with clear actor attribution",
+      "notes": "Empat entry audit trail. Setiap action tercatat dengan actor yang jelas. Entry 1: agent create_draft. Entry 2: human APPROVE_ORDER. Entry 3: agent DEDUCT_STOCK. Entry 4: agent NOTIFY_CUSTOMER."
     },
     {
-      "layout": "security",
-      "title": "Security & Safety Model",
-      "bullets": [
-        "Capability Boundary — Agent hanya mendapatkan tools yang diperlukan",
-        "Human Transaction Gate — Approval membutuhkan human action",
-        "No Direct Database Access — Agent tidak diberikan direct database capability",
-        "Auditability — Workflow menghasilkan audit trail dengan actor distinction",
-        "Least Privilege — Agent tidak diberi capability transaction berisiko tinggi"
-      ],
-      "background": "0a0a0a",
-      "notes": "The architecture is designed around bounded authority, human approval, and auditability."
-    },
-    {
-      "layout": "comparison",
-      "title": "Why This Is Different From a Chatbot",
-      "bullets": [
-        "Traditional Chatbot: Generates text → TuntasUMKM: Uses business tools",
-        "Traditional Chatbot: Stateless response → TuntasUMKM: Multi-step workflow",
-        "Traditional Chatbot: No transaction boundary → TuntasUMKM: Human transaction gate",
-        "Traditional Chatbot: Limited observability → TuntasUMKM: Audit trail",
-        "Traditional Chatbot: Text output → TuntasUMKM: Business action preparation"
-      ],
-      "background": "0a0a0a",
-      "notes": "TuntasUMKM bukan sekadar chatbot yang menghasilkan teks."
+      "layout": "attack_boundary",
+      "title": "Attack the Boundary",
+      "subtitle": "Try to approve order",
+      "notes": "Bukan karena prompt-nya melarang agent. Tool-nya memang tidak tersedia. Coba minta agent approve order. Agent gagal karena capability-nya memang tidak ada."
     },
     {
       "layout": "title",
       "title": "TUNTASUMKM",
-      "subtitle": "From Conversation to Business Action\n\nAI Agent + MCP + Human Approval + Auditability\n\nAI HackFest 2026 — Build Agent, Deliver Impact.\nDari Percakapan, Jadi Penjualan.",
-      "background": "0a0a0a",
-      "notes": "Draft dibuat oleh agent. Keputusan transaksi tetap berada pada manusia. Efek bisnis dijalankan backend setelah approval. Dan seluruh proses dicatat dalam audit trail."
+      "subtitle": "Build Agent, Deliver Impact",
+      "notes": "TuntasUMKM tidak mencoba membuat AI melakukan semuanya. Kami membuat AI melakukan hal yang tepat, dan berhenti di tempat yang tepat. Build Agent, Deliver Impact."
     }
   ]
 }
