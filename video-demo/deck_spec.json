@@ -1,0 +1,130 @@
+{
+  "slide_size": "16:9",
+  "slides": [
+    {
+      "layout": "title",
+      "title": "TUNTASUMKM",
+      "subtitle": "AI Agent-assisted order management\nwith bounded authority and Human-in-the-Loop approval",
+      "background": "0a0a0a",
+      "notes": "UMKM menerima pesanan dari berbagai channel. Automation dapat membantu — tetapi keputusan transaksional membutuhkan kontrol yang jelas."
+    },
+    {
+      "layout": "title_content",
+      "title": "The Problem",
+      "bullets": [
+        "UMKM menerima pesanan dari berbagai channel — WhatsApp, Instagram, Tokopedia",
+        "Automation dapat membantu memahami dan menyiapkan pesanan",
+        "Keputusan transaksional membutuhkan kontrol yang jelas",
+        "AI chatbot biasa menghasilkan jawaban, bukan menjalankan workflow bisnis"
+      ],
+      "background": "0a0a0a",
+      "notes": "TuntasUMKM menggunakan AI Agent untuk bagian yang membutuhkan tool use, tetapi mempertahankan human approval pada transaction gate."
+    },
+    {
+      "layout": "title_content",
+      "title": "Architecture",
+      "bullets": [
+        "User → Hermes Agent → MCP → Bounded Tools → Order Draft",
+        "Human Approval → Backend Transaction → Audit Trail",
+        "Agent tidak memiliki akses langsung ke database atau fungsi transaksi berisiko tinggi"
+      ],
+      "background": "0a0a0a",
+      "notes": "Hermes Agent menjadi reasoning dan tool-use runtime. MCP menjadi capability boundary untuk tools yang diberikan kepada agent."
+    },
+    {
+      "layout": "title_content",
+      "title": "Bounded Authority",
+      "bullets": [
+        "Available: search_catalog, check_inventory, calculate_order_total, create_order_draft",
+        "Not Available: approve_order, reject_order, deduct_stock, send_customer_message",
+        "Agent tidak memiliki capability langsung untuk melakukan transaksi berisiko tinggi"
+      ],
+      "background": "0a0a0a",
+      "notes": "Agent memiliki kewenangan yang dibatasi. Transaction authority tetap berada pada backend + human approval."
+    },
+    {
+      "layout": "title_content",
+      "title": "Human-in-the-Loop",
+      "bullets": [
+        "Agent membuat draft order (status: pending_approval)",
+        "Human melihat confirmation dialog dengan detail order dan konsekuensi",
+        "Human melakukan approval melalui dashboard UI",
+        "Backend menjalankan stock deduction",
+        "Audit trail mencatat: agent → human → agent (downstream effects)"
+      ],
+      "background": "0a0a0a",
+      "notes": "Human approval bukan sekadar UI decoration. Approval adalah transaction gate."
+    },
+    {
+      "layout": "title_content",
+      "title": "MCP Tools",
+      "bullets": [
+        "search_catalog — Search product catalog by name, SKU, or keyword",
+        "check_inventory — Check current stock for a specific product",
+        "calculate_order_total — Calculate total price for a proposed order",
+        "create_order_draft — Create pending order draft (no stock deduction, no approval)"
+      ],
+      "background": "0a0a0a",
+      "notes": "Keempat tools tersebut AVAILABLE. Tidak semua tools dipanggil pada setiap workflow. Agent memilih tools yang diperlukan berdasarkan intent."
+    },
+    {
+      "layout": "title_content",
+      "title": "Verified Demo Evidence",
+      "bullets": [
+        "Order ID: ORD-20260927-35BD8E",
+        "Product: Sarung Tenun Samarinda (SKU: SRG-TNN-04)",
+        "Quantity: 1 | Price: Rp 520.000",
+        "Stock: 3 → 2 | Deduction: 1",
+        "Human approval: YES | Audit entries: 4",
+        "Agent tools used: search_catalog, create_order_draft"
+      ],
+      "background": "0a0a0a",
+      "notes": "Audit trail: agent create_draft, human APPROVE_ORDER, agent DEDUCT_STOCK, agent NOTIFY_CUSTOMER."
+    },
+    {
+      "layout": "title_content",
+      "title": "Audit Trail",
+      "bullets": [
+        "01 — agent: create_draft → pending_approval",
+        "02 — human: APPROVE_ORDER → approved",
+        "03 — agent: DEDUCT_STOCK → deducted",
+        "04 — agent: NOTIFY_CUSTOMER → sent"
+      ],
+      "background": "0a0a0a",
+      "notes": "Audit trail mencatat bukan hanya apa yang terjadi, tetapi juga actor yang tercatat pada setiap tahap."
+    },
+    {
+      "layout": "title_content",
+      "title": "Security & Safety Model",
+      "bullets": [
+        "Capability Boundary — Agent hanya mendapatkan tools yang diperlukan",
+        "Human Transaction Gate — Approval membutuhkan human action",
+        "No Direct Database Access — Agent tidak diberikan direct database capability",
+        "Auditability — Workflow menghasilkan audit trail dengan actor distinction",
+        "Least Privilege — Agent tidak diberi capability transaction berisiko tinggi"
+      ],
+      "background": "0a0a0a",
+      "notes": "The architecture is designed around bounded authority, human approval, and auditability."
+    },
+    {
+      "layout": "title_content",
+      "title": "Why This Is Different From a Chatbot",
+      "bullets": [
+        "Traditional Chatbot: Generates text → TuntasUMKM: Uses business tools",
+        "Traditional Chatbot: Stateless response → TuntasUMKM: Multi-step workflow",
+        "Traditional Chatbot: No transaction boundary → TuntasUMKM: Human transaction gate",
+        "Traditional Chatbot: Limited observability → TuntasUMKM: Audit trail",
+        "Traditional Chatbot: Text output → TuntasUMKM: Business action preparation"
+      ],
+      "background": "0a0a0a",
+      "notes": "TuntasUMKM bukan sekadar chatbot yang menghasilkan teks."
+    },
+    {
+      "layout": "title",
+      "title": "TUNTASUMKM",
+      "subtitle": "From Conversation to Business Action\n\nAI Agent + MCP + Human Approval + Auditability\n\nAI HackFest 2026 — Build Agent, Deliver Impact.\nDari Percakapan, Jadi Penjualan.",
+      "background": "0a0a0a",
+      "notes": "Draft dibuat oleh agent. Keputusan transaksi tetap berada pada manusia. Efek bisnis dijalankan backend setelah approval. Dan seluruh proses dicatat dalam audit trail."
+    }
+  ]
+}
