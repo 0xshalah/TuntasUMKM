@@ -41,7 +41,7 @@
       "layout": "human_approval",
       "title": "Human Approval",
       "subtitle": "Transaction gate",
-      "notes": "Approval adalah backend operation yang dipicu dari human approval flow. Backend enforce state-transition: hanya order berstatus pending_approval yang bisa bertransisi. Honest note: endpoint approval saat ini belum memiliki authentication. Yang di-enforce adalah state-transition validity."
+      "notes": "Approval adalah backend operation yang dipicu dari human approval flow. Backend enforce state-transition: hanya order berstatus pending_approval yang bisa bertransisi. Honest note: endpoint approval saat ini belum memiliki authentication. Yang di-enforce adalah state-transition validity. Dashboard menampilkan: order detail, stock information, audit trail, approve/reject buttons, confirmation dialog."
     },
     {
       "layout": "real_effect",
@@ -59,7 +59,7 @@
       "layout": "attack_boundary",
       "title": "Attack the Boundary",
       "subtitle": "Try to approve order",
-      "notes": "Bukan karena prompt-nya melarang agent. Tool-nya memang tidak ada di MCP registry. Honest limitation: agent memiliki execute_code dan terminal. Secara teknis bisa bypass. MCP boundary adalah model-awareness layer, bukan absolute security boundary. Security boundary yang sebenarnya ada di backend state-transition enforcement."
+      "notes": "Available: search_catalog, check_inventory, calculate_order_total, create_order_draft. Not in MCP: approve_order, reject_order, deduct_stock, send_customer_message. Bukan karena prompt-nya melarang agent. Tool-nya memang tidak ada di MCP registry. Honest limitation: agent memiliki execute_code dan terminal. Secara teknis bisa bypass. MCP boundary adalah model-awareness layer, bukan absolute security boundary. Security boundary yang sebenarnya ada di backend state-transition enforcement."
     },
     {
       "layout": "title",

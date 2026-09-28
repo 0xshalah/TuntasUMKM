@@ -201,7 +201,7 @@ PENDING APPROVAL
 **Langkah:**
 1. Buka Chrome/Edge ke `http://localhost:3000`
 2. Klik order yang baru dibuat agent di approval queue
-3. Tunjukkan order detail: product, SKU, quantity, price, status
+3. Tunjukkan order detail: product, SKU, quantity, price, status, stock information
 4. Tunjukkan tombol "Approve" dan "Reject"
 5. Klik "Approve"
 6. Tunjukkan confirmation dialog dengan konsekuensi
@@ -302,6 +302,7 @@ Available tools:
 ✓ create_order_draft
 
 ✗ approve_order
+✗ reject_order
 ✗ deduct_stock
 ✗ send_customer_message
 ```
